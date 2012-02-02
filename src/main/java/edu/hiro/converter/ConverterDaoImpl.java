@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Query;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.hiro.converter.access.AbstractPatientItem;
@@ -16,6 +17,7 @@ import edu.hiro.util.CIdList;
 import edu.hiro.util.IPaging;
 import edu.hiro.util.StringHelper;
 
+@Service("converterDao")
 @Transactional
 public class ConverterDaoImpl extends AbstractDaoImpl implements ConverterDao
 {	

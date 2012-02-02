@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Required;
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.hiro.converter.access.AbstractPatientItem;
@@ -28,16 +30,17 @@ import edu.hiro.util.FileHelper;
 import edu.hiro.util.IPaging;
 import edu.hiro.util.StringHelper;
 
+@Service("converterService")
 @Transactional
 public class ConverterServiceImpl implements ConverterService
 {	
 	public static final String TABLE_SUFFIX=".txt";
 	public static final String MERGE_SUFFIX=".mer";
 	
+	@Resource(name="converterDao")
 	protected ConverterDao dao;	
 	
 	public ConverterDao getDao(){return this.dao;}
-	@Required public void setDao(ConverterDao dao){this.dao=dao;}
 
 	//////////////////////////////////////////////////////////////////
 	
@@ -59,6 +62,8 @@ public class ConverterServiceImpl implements ConverterService
 		patient.initialize();
 		return patient;
 	}
+	
+	//////////////////////////////////////////////////////////////
 	
 	public void importFolder(String dir, ImportParams params)
 	{

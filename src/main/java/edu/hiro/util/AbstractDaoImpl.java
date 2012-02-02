@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.hibernate.Query;
@@ -14,7 +15,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.jdbc.Work;
 import org.hibernate.stat.Statistics;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Repository;
@@ -23,10 +23,12 @@ import org.springframework.stereotype.Repository;
 public abstract class AbstractDaoImpl implements IAbstractDao
 {
 	public static final int BATCH_SIZE=50;
+	//@Resource(name="sessionFactory")
 	protected SessionFactory sessionFactory;
 	private JdbcTemplate jdbcTemplate=null;
 	
-	@Required public void setSessionFactory(final SessionFactory sessionFactory){this.sessionFactory=sessionFactory;}
+	
+	//@Required public void setSessionFactory(final SessionFactory sessionFactory){this.sessionFactory=sessionFactory;}
 	
 	public Session getSession()
 	{
