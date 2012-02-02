@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,19 @@ import edu.hiro.converter.readers.FmHccTableReader;
 import edu.hiro.converter.readers.FmHcvTableReader;
 import edu.hiro.converter.readers.ItemTableReader;
 import edu.hiro.converter.readers.TableReader;
+import edu.hiro.converter.repositories.AccessPatientRepository;
+import edu.hiro.converter.repositories.BasicInfoItemRepository;
+import edu.hiro.converter.repositories.BiopsyAnonymizationItemRepository;
+import edu.hiro.converter.repositories.BiopsyItemRepository;
+import edu.hiro.converter.repositories.FmFirstExamRepository;
+import edu.hiro.converter.repositories.FmHbvPatientRepository;
+import edu.hiro.converter.repositories.FmHccPatientRepository;
+import edu.hiro.converter.repositories.FmHcvPatientRepository;
+import edu.hiro.converter.repositories.HospitalizationItemRepository;
+import edu.hiro.converter.repositories.InterferonItemRepository;
+import edu.hiro.converter.repositories.PrimaryDiseaseItemRepository;
+import edu.hiro.converter.repositories.SnpAnonymizationItemRepository;
+import edu.hiro.converter.repositories.SnpItemRepository;
 import edu.hiro.util.BeanHelper;
 import edu.hiro.util.CException;
 import edu.hiro.util.CIdList;
@@ -222,7 +236,7 @@ public class ConverterServiceImpl implements ConverterService
 		getDao().addOrUpdateItems(newitems);
 		return map;
 	}
-
+	
 	////////////////////////////////////////////////////////////////////
 	
 	public void addOrUpdateFmHbvPatients(Collection<FmHbvPatient> patients)
@@ -245,4 +259,27 @@ public class ConverterServiceImpl implements ConverterService
 	
 	//////////////////////////////////////////////////////////
 	
+	@Autowired AccessPatientRepository accessPatientRepository;
+	@Autowired BasicInfoItemRepository basicInfoItemRepository;
+	@Autowired BiopsyAnonymizationItemRepository biopsyAnonymizationItemRepository;
+	@Autowired BiopsyItemRepository biopsyItemRepository;
+	@Autowired FmFirstExamRepository fmFirstExamRepository;
+	@Autowired FmHbvPatientRepository fmHbvPatientRepository;
+	@Autowired FmHccPatientRepository fmHccPatientRepository;
+	@Autowired FmHcvPatientRepository fmHcvPatientRepository;
+	@Autowired HospitalizationItemRepository hospitalizationItemRepository;
+	@Autowired InterferonItemRepository interferonItemRepository;
+	@Autowired PrimaryDiseaseItemRepository primaryDiseaseItemRepository;
+	@Autowired SnpAnonymizationItemRepository snpAnonymizationItemRepository;
+	@Autowired SnpItemRepository snpItemRepository;
+	
+	public void test()
+	{
+		FmHcvPatient patient=new FmHcvPatient(1);
+		fmHcvPatientRepository.save(patient);
+		for (FmHcvPatient cur : fmHcvPatientRepository.findAll())
+		{
+			System.out.println("found patient: "+patient.toString());
+		}
+	}
 }

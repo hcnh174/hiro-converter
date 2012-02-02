@@ -91,7 +91,8 @@ public class Converter
 	{
 		ConverterService converterService=getConverterService();
 		List<String> filenames=StringHelper.wrap(StringHelper.split(params.files,","),params.inDir,"");
-		converterService.importFiles(filenames, new ImportParams(writer));
+		//converterService.importFiles(filenames, new ImportParams(writer));
+		converterService.test();
 		return true;
 	}
 	
@@ -120,7 +121,7 @@ public class Converter
 			throw new CException("can't create application context because database not created yet: "+params.converter.getName());
 			
 		applicationContext = new GenericXmlApplicationContext();
-		SpringHelper.registerDataSource(applicationContext,"converterDataSource",params.converter);
+		//SpringHelper.registerDataSource(applicationContext,"converterDataSource",params.converter);
 		applicationContext.load("META-INF/spring/applicationContext.xml");
 		//SpringHelper.registerDataSource(applicationContext,"dataSource",params.hdb);
 		//registerDataSource(applicationContext,"converterDataSource",params.db,"converter");

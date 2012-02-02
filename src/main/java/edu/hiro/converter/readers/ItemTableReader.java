@@ -121,7 +121,7 @@ public class ItemTableReader extends AbstractTableReader
 		{
 			AbstractPatientItem item=(AbstractPatientItem)obj;
 			AccessPatient patient=getPatientById(MathHelper.parseInt(value));
-			patient.addItem(item);
+			//patient.addItem(item); // hack!!! 
 		}
 		else if (property.indexOf("ﾍﾟｸﾞﾘﾊﾞｼｰﾄ")!=-1)
 			super.setProperty(obj,"ﾍﾟｶﾞｼｽｼｰﾄNo",value);

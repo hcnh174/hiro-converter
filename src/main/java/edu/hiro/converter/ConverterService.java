@@ -30,4 +30,6 @@ public interface ConverterService
 	void addOrUpdateFmFirstExamPatients(Collection<FmFirstExam> patients);
 	
 	ConverterDao getDao();
+	
+	void test();
 }
