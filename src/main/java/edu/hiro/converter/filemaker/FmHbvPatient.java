@@ -252,7 +252,4 @@ public class FmHbvPatient extends AbstractFmPatient
 	{
 		super(rowID);
 	}
-	
-	@Id
-	public Integer getRowID(){return this.rowID;}
 }

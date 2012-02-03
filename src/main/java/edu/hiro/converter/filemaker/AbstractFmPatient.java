@@ -1,16 +1,14 @@
 package edu.hiro.converter.filemaker;
 
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-
-import org.springframework.data.annotation.Id;
 
 import edu.hiro.util.AbstractEntity;
 
 @MappedSuperclass
-public class AbstractFmPatient extends AbstractEntity
+public abstract class AbstractFmPatient extends AbstractEntity
 {
-	@Id
-	protected Integer rowID=null;
+	@Id	protected Integer rowID=null;
 	
 	public AbstractFmPatient(){}
 	
@@ -19,5 +17,6 @@ public class AbstractFmPatient extends AbstractEntity
 		this.rowID=rowID;
 	}
 	
+	public Integer getRowID(){return this.rowID;}
 	public void setRowID(final Integer rowID){this.rowID=rowID;}
 }

@@ -1,5 +1,7 @@
 package edu.hiro.converter.filemaker;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -9,6 +11,7 @@ import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name="fmhcv")
+@Access(value=AccessType.FIELD)
 public class FmHcvPatient extends AbstractFmPatient
 {
 	protected String 患者ID="";
@@ -297,7 +300,4 @@ public class FmHcvPatient extends AbstractFmPatient
 	{
 		super(rowID);
 	}
-	
-	@Id
-	public Integer getRowID(){return this.rowID;}
 }
