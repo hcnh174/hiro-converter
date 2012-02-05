@@ -1,0 +1,11 @@
+C:\Program Files\PostgreSQL\9.1\bin
+
+COPY fmhcv FROM 'H:/patientdb.etc/fmhcv.txt'
+
+psql \copy fmhcv FROM 'H:/patientdb.etc/fmhcv.txt'
+
+COPY fmhcv
+FROM 'H:/patientdb.etc/fmhcv-test2.txt'
+DELIMITER '	'
+CSV HEADER
+

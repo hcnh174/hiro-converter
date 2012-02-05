@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+
 import au.com.bytecode.opencsv.CSVReader;
 
 public class CTable
@@ -248,6 +250,16 @@ public class CTable
 	public void addHeader(String name)
 	{
 		getHeader().add(name);
+	}
+	
+	public List<String> getColnames()
+	{
+		List<String> colnames=Lists.newArrayList();
+		for (Cell cell : header.getCells())
+		{
+			colnames.add(cell.getStringValue());
+		}
+		return colnames;
 	}
 	
 	public int getNumColumns()
@@ -655,6 +667,29 @@ public class CTable
 			if (value==null)
 				return dflt;
 			return value;
+		}
+		
+		public List<Object> getValues()
+		{
+			List<Object> values=Lists.newArrayList();
+			for (Cell cell : cells)
+			{
+				values.add(cell.getValue());
+			}
+			return values;
+		}
+		
+		public List<String> getStringValues()
+		{
+			List<String> values=Lists.newArrayList();
+			for (Cell cell : cells)
+			{
+				Object value=cell.getValue();
+				if (value==null)
+					value="";
+				values.add(value.toString());
+			}
+			return values;
 		}
 		
 		public int size()

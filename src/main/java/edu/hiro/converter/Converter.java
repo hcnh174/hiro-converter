@@ -1,55 +1,50 @@
 package edu.hiro.converter;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
+import edu.hiro.converter.batch.BatchImportService;
+import edu.hiro.converter.batch.BatchImportServiceImpl;
 import edu.hiro.util.CException;
 import edu.hiro.util.DatabaseHelper;
-import edu.hiro.util.ExceptionHelper;
-import edu.hiro.util.FileHelper;
 import edu.hiro.util.MessageWriter;
-import edu.hiro.util.SpringHelper;
 import edu.hiro.util.StringHelper;
 
 public class Converter
 {	
-	
-	
 	public static void main(String[] argv)
-	{		
-		Args args=new Args(argv);
-		if (args.actions.size()==0 || args.actions.get(0)==Action.help)
-		{
-			System.out.println(Args.getHelp());
-			return;
-		}
-		
-		Params params=args.loadParams();
-		System.out.println("params: "+params.toString());
-		
-		Converter converter=new Converter(params);
-		try
-		{
-			converter.execute(args.actions);
-		}
-		catch(Exception e)
-		{
-			System.err.println(ExceptionHelper.getMessage(e));
-			e.printStackTrace();
-			FileHelper.writeFile("c:/temp/converter-exception.txt",ExceptionHelper.getMessage(e));
-		}
+	{
+		String filename="h:/patientdb.etc/fmhcv.txt";
+		BatchImportService batchService=new BatchImportServiceImpl();
+		batchService.loadPatients(filename);
 	}
+	
+//	public static void main(String[] argv)
+//	{		
+//		Args args=new Args(argv);
+//		if (args.actions.size()==0 || args.actions.get(0)==Action.help)
+//		{
+//			System.out.println(Args.getHelp());
+//			return;
+//		}
+//		
+//		Params params=args.loadParams();
+//		System.out.println("params: "+params.toString());
+//		
+//		Converter converter=new Converter(params);
+//		try
+//		{
+//			converter.execute(args.actions);
+//		}
+//		catch(Exception e)
+//		{
+//			System.err.println(ExceptionHelper.getMessage(e));
+//			e.printStackTrace();
+//			FileHelper.writeFile("c:/temp/converter-exception.txt",ExceptionHelper.getMessage(e));
+//		}
+//	}
 
 	private Params params;
 	private MessageWriter writer=new MessageWriter();

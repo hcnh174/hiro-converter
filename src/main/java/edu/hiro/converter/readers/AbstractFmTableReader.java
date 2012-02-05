@@ -6,8 +6,8 @@ import java.util.List;
 import edu.hiro.converter.ConverterServiceImpl;
 import edu.hiro.converter.ImportParams;
 import edu.hiro.converter.filemaker.AbstractFmPatient;
+import edu.hiro.util.CException;
 import edu.hiro.util.CTable;
-import edu.hiro.util.DatabaseHelper;
 import edu.hiro.util.DateHelper;
 
 public abstract class AbstractFmTableReader extends AbstractTableReader
@@ -34,6 +34,27 @@ public abstract class AbstractFmTableReader extends AbstractTableReader
 	{
 		try
 		{
+			saveOrUpdateAll();
+			//this.converterService.getDao().saveOrUpdateAll(this.patients);
+			this.patients.clear();
+		}
+		catch(Exception e)//InvalidStateException
+		{
+			System.out.println(e.getMessage());//DatabaseHelper.getDetails(e));
+		}
+	}
+	
+	protected void saveOrUpdateAll()
+	{
+		throw new CException("must override this in derived class");
+	}
+	
+	/*
+	@Override
+	protected void postProcess(CTable table, List<CTable.Row> rows)
+	{
+		try
+		{
 			this.converterService.getDao().saveOrUpdateAll(this.patients);
 			this.patients.clear();
 		}
@@ -42,7 +63,9 @@ public abstract class AbstractFmTableReader extends AbstractTableReader
 			System.out.println(e.getMessage());//DatabaseHelper.getDetails(e));
 		}
 	}
-
+	*/
+	
+	/*
 	@Override
 	protected void setProperty(Object obj, String property, String value)
 	{
@@ -58,4 +81,5 @@ public abstract class AbstractFmTableReader extends AbstractTableReader
 			super.setProperty(obj,"合併症出現2度の肝性脳症診断日",value);
 		else super.setProperty(obj,property,value);
 	}
+	*/
 }

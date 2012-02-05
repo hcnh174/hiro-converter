@@ -2,15 +2,23 @@ package edu.hiro.converter.readers;
 
 import edu.hiro.converter.ConverterServiceImpl;
 import edu.hiro.converter.ImportParams;
+import edu.hiro.converter.filemaker.AbstractFmPatient;
 import edu.hiro.converter.filemaker.FmHcvPatient;
+import edu.hiro.converter.repositories.FmHcvPatientRepository;
 import edu.hiro.util.CTable;
+import edu.hiro.util.StringHelper;
 
 public class FmHcvTableReader extends AbstractFmTableReader
 {	
-	public FmHcvTableReader(ConverterServiceImpl converterService, ImportParams params)
+	protected FmHcvPatientRepository fmHcvPatientRepository;
+	
+	public FmHcvTableReader(ConverterServiceImpl converterService, ImportParams params, FmHcvPatientRepository fmHcvPatientRepository)
 	{
 		super(converterService,params);
-	
+		this.fmHcvPatientRepository=fmHcvPatientRepository;
+		
+		addConversion("DB №","DBno");		
+		/*
 		addConversion("DB ?","DBno");
 		addConversion("副　治療施設","副治療施設");
 		addConversion("Fatty Liver","FattyLiver");
@@ -85,14 +93,15 @@ public class FmHcvTableReader extends AbstractFmTableReader
 		addConversion("ＨＡＩ　score Bx8","HAIscoreBx8");
 		addConversion("ＨＡＩ　score Bx9","HAIscoreBx9");
 		addConversion("ＨＡＩ　score Bx10","HAIscoreBx10");
-
+		*/
 	}
 
 	@Override
 	protected void preProcess(CTable table)
 	{
 		super.preProcess(table);
-		converterService.getDao().deleteFmHcvData();
+		fmHcvPatientRepository.deleteAll();
+		//converterService.getDao().deleteFmHcvData();
 	}
 
 	@Override
@@ -101,5 +110,16 @@ public class FmHcvTableReader extends AbstractFmTableReader
 		FmHcvPatient patient=new FmHcvPatient(id);
 		this.patients.add(patient);
 		return patient;
+	}
+	
+	@Override
+	protected void saveOrUpdateAll()
+	{
+		System.out.println("saving patients: num="+StringHelper.toString(patients.size()));
+		for (AbstractFmPatient patient : this.patients)
+		{
+			System.out.println("saving patient: "+StringHelper.toString(patient));
+			fmHcvPatientRepository.save((FmHcvPatient)patient);
+		}
 	}
 }

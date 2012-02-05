@@ -1,30 +1,24 @@
 package edu.hiro.converter.access;
 
 import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-
-import org.springframework.data.annotation.Id;
 
 import edu.hiro.util.AbstractEntity;
 
 @MappedSuperclass
 public abstract class AbstractPatientItem extends AbstractEntity
 {
+	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(columnDefinition="SERIAL NOT NULL")
+	protected Integer id;
 	protected Integer 個人ID;
-	//protected AccessPatient patient;
 
-	public abstract Integer getId();
-	public abstract void setId(int id);
-
-//	@ManyToOne(fetch=FetchType.LAZY)
-//	@JoinColumn(name="個人ID")
-//	public AccessPatient getPatient(){return this.patient;}
-//	public void setPatient(final AccessPatient patient){this.patient=patient;}
+	public Integer getId(){return this.id;}
+	public void setId(int id){this.id=id;}
 	
 	public AbstractPatientItem() {}
-	
-	public void initialize(){}
 }

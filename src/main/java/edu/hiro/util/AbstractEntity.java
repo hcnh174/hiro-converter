@@ -9,7 +9,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PreUpdate;
 
 @MappedSuperclass
-public abstract class AbstractEntity implements IEntity
+public abstract class AbstractEntity// implements IEntity
 {
 //	protected Calendar created;
 //	protected Calendar updated;
@@ -30,4 +30,9 @@ public abstract class AbstractEntity implements IEntity
 //		this.updated = Calendar.getInstance();
 //		System.out.println("onUpdate called: "+this.updated.toString());
 //	}
+	
+	public String toString()
+	{
+		return StringHelper.toString(this);
+	}
 }

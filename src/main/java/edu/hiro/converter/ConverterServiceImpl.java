@@ -6,10 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Lists;
 
 import edu.hiro.converter.access.AbstractPatientItem;
 import edu.hiro.converter.access.AccessPatient;
@@ -73,7 +77,6 @@ public class ConverterServiceImpl implements ConverterService
 		AccessPatient patient=getDao().getAccessPatient(id);
 		if (patient==null)
 			throw new CException("patient could not be found: "+id);
-		patient.initialize();
 		return patient;
 	}
 	
@@ -166,9 +169,17 @@ public class ConverterServiceImpl implements ConverterService
 		reader.loadInBatches(table);
 	}
 	
+	/*
 	private void loadFmHcvTable(CTable table, ImportParams params)
 	{
 		TableReader reader=new FmHcvTableReader(this,params);
+		reader.loadInBatches(table);
+	}
+	*/
+	
+	private void loadFmHcvTable(CTable table, ImportParams params)
+	{
+		TableReader reader=new FmHcvTableReader(this,params,fmHcvPatientRepository);
 		reader.loadInBatches(table);
 	}
 	
@@ -208,7 +219,6 @@ public class ConverterServiceImpl implements ConverterService
 			if (map.containsKey(id))
 			{
 				AccessPatient patient=map.get(id);
-				patient.initialize();
 				continue;
 			}
 			AccessPatient patient=new AccessPatient(id);
@@ -259,6 +269,9 @@ public class ConverterServiceImpl implements ConverterService
 	
 	//////////////////////////////////////////////////////////
 	
+	@PersistenceContext
+    EntityManager entityManager;
+
 	@Autowired AccessPatientRepository accessPatientRepository;
 	@Autowired BasicInfoItemRepository basicInfoItemRepository;
 	@Autowired BiopsyAnonymizationItemRepository biopsyAnonymizationItemRepository;
@@ -275,11 +288,59 @@ public class ConverterServiceImpl implements ConverterService
 	
 	public void test()
 	{
-		FmHcvPatient patient=new FmHcvPatient(1);
-		fmHcvPatientRepository.save(patient);
-		for (FmHcvPatient cur : fmHcvPatientRepository.findAll())
+		String tablename="fmhcv";
+		String filename="H:/patientdb.etc/"+tablename+".txt";
+		String str=FileHelper.readFile(filename);
+		CTable table=CTable.parseTabDelimited(str);
+		System.out.println("parsed table: "+table.getNumColumns()+"x"+table.getRows().size());
+		String sql=convertTableToInsertCommand(table,tablename);
+		//System.out.println(sql);
+		entityManager.createNativeQuery(sql).executeUpdate();
+		
+		//params.setType(ImportParams.TableType.valueOf(identifier));
+//		ImportParams params=new ImportParams();
+//		loadFmHcvTable(table,params);
+		
+//		FmHcvPatient patient=new FmHcvPatient(1);
+//		fmHcvPatientRepository.save(patient);
+//		for (FmHcvPatient cur : fmHcvPatientRepository.findAll())
+//		{
+//			System.out.println("found patient: "+patient.toString());
+//		}
+	}
+	
+	public static String convertTableToInsertCommand(CTable table, String tablename)
+	{
+		StringBuilder buffer=new StringBuilder();
+		//buffer.append("TRUNCATE "+tablename+";\n");
+		buffer.append("INSERT INTO "+tablename+" ("+StringHelper.join(table.getColnames())+")\n");
+		buffer.append("VALUES\n");
+		boolean first=true;
+		for (CTable.Row row : table.getRows())
 		{
-			System.out.println("found patient: "+patient.toString());
+			if (first)
+				first=false;
+			else buffer.append(",\n");
+			buffer.append("("+StringHelper.join(wrap(row.getStringValues(),"'"))+")");
 		}
+		buffer.append(";\n");
+		FileHelper.writeFile("d:/temp/insert.sql",buffer.toString());
+		return buffer.toString();
+
+	}
+	
+	public static List<String> wrap(List<String> values, String wrap)
+	{
+		return wrap(values,wrap,wrap);
+	}
+	
+	public static List<String> wrap(List<String> values, String prefix, String suffix)
+	{
+		List<String> newvalues=Lists.newArrayList();
+		for (Object value : values)
+		{
+			newvalues.add(prefix+value.toString()+suffix);
+		}
+		return newvalues;
 	}
 }
