@@ -7,6 +7,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 
 import edu.hiro.converter.batch.BatchImportService;
 import edu.hiro.converter.batch.BatchImportServiceImpl;
+import edu.hiro.converter.batch.HeaderCallbackHandler;
 import edu.hiro.util.CException;
 import edu.hiro.util.DatabaseHelper;
 import edu.hiro.util.MessageWriter;
@@ -17,8 +18,16 @@ public class Converter
 	public static void main(String[] argv)
 	{
 		String dir="h:/patientdb.etc";
+		String str="ＮＥＬＳＯＮnelson";
+		//StringHelper.println(Normalizer.normalize(str,Normalizer.NFKD));
+		//StringHelper.println(StringHelper.normalize(str));
+		
+		
+		HeaderCallbackHandler handler=new HeaderCallbackHandler();
+		handler.handleLine(str+"\t"+str);
+		
 		BatchImportService batchService=new BatchImportServiceImpl();
-		batchService.loadPatients(dir);
+		//batchService.loadPatients(dir);
 	}
 	
 //	public static void main(String[] argv)

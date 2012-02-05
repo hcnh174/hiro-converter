@@ -8,7 +8,7 @@ import edu.hiro.util.StringHelper;
 
 public class HeaderCallbackHandler implements LineCallbackHandler {
 
-	private DelimitedLineTokenizer tokenizer;
+	private DelimitedLineTokenizer tokenizer=new DelimitedLineTokenizer();
 	private char delimiter='\t';
 	
 	public void setLineTokenizer(DelimitedLineTokenizer tokenizer)
@@ -28,6 +28,10 @@ public class HeaderCallbackHandler implements LineCallbackHandler {
 	{
 		System.out.println("Header: "+line);
 		String[] fields=StringHelper.splitAsArray(line,""+delimiter); //"\t"
+		for (int index=0;index<fields.length;index++)
+		{
+			fields[index]=StringHelper.normalize(fields[index]);
+		}		
 		System.out.println("Fields: "+StringHelper.join(fields,","));
 		System.out.println("fields.length="+fields.length);
 		tokenizer.setNames(fields);
