@@ -16,9 +16,9 @@ public class Converter
 {	
 	public static void main(String[] argv)
 	{
-		String filename="h:/patientdb.etc/fmhcv.txt";
+		String dir="h:/patientdb.etc";
 		BatchImportService batchService=new BatchImportServiceImpl();
-		batchService.loadPatients(filename);
+		batchService.loadPatients(dir);
 	}
 	
 //	public static void main(String[] argv)

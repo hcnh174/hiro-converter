@@ -8,8 +8,8 @@ import edu.hiro.util.SpringBatchHelper;
 
 public class BatchImportServiceImpl implements BatchImportService
 {
-	public void loadPatients(String filename) {
-		JobExecution jobExecution = runJob("loadPatients","resource",filename);
+	public void loadPatients(String dir) {
+		JobExecution jobExecution = runJob("loadPatients","dir",dir);
 		System.out.println("Job ended with status: "+jobExecution.getExitStatus());
 	}
 	

@@ -5,5 +5,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface BatchImportService
 {
-	void loadPatients(String filename);
+	void loadPatients(String dir);
 }

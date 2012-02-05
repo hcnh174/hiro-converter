@@ -3,6 +3,7 @@ package edu.hiro.converter.batch;
 import org.springframework.batch.item.file.LineCallbackHandler;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 
+import edu.hiro.util.FileHelper;
 import edu.hiro.util.StringHelper;
 
 public class HeaderCallbackHandler implements LineCallbackHandler {
@@ -28,8 +29,13 @@ public class HeaderCallbackHandler implements LineCallbackHandler {
 		System.out.println("Header: "+line);
 		String[] fields=StringHelper.splitAsArray(line,""+delimiter); //"\t"
 		System.out.println("Fields: "+StringHelper.join(fields,","));
+		System.out.println("fields.length="+fields.length);
 		tokenizer.setNames(fields);
 		tokenizer.setDelimiter(delimiter);
 	}
 
+//	private String cleanField(String field)
+//	{
+//		return StringHelper.fixWideChars(field);
+//	}
 }

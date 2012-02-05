@@ -10,43 +10,6 @@
 	http://www.springframework.org/schema/context
 	http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
- <!-- 
-	<context:property-placeholder location="classpath*:META-INF/spring/database.properties"/>
-
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${database.driverClassName}"/>
-        <property name="url" value="${database.url}"/>
-        <property name="username" value="${database.username}"/>
-        <property name="password" value="${database.password}"/>
-    </bean>
-    
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="persistenceUnitName" value="persistenceUnit"/>
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-    
-    
- 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
-    </bean>
-    
-   
-    <tx:annotation-driven mode="aspectj" transaction-manager="transactionManager"/>
-      -->
-
-	<!-- 
-	<context:component-scan base-package="edu.hiro.converter"/>
-
-    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-    
-    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
-    </bean>
-     -->
-
-
 	<!-- batch setup -->
 
 	<bean id="repositoryTransactionManager" class="org.springframework.batch.support.transaction.ResourcelessTransactionManager" />
@@ -63,8 +26,10 @@
 		<property name="delimiter" value="&#9;" />
 	</bean>
 
-	<bean id="reader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
-		<property name="resource" value="file:#{jobParameters[resource]}" />
+	<!-- readers -->
+
+	<bean id="fmHcvPatientReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+		<property name="resource" value="file:#{jobParameters[dir]}/fmhcv-test2.txt" />
 		<property name="linesToSkip" value="1" />
 		<property name="encoding" value="UTF-8" />
 		<property name="skippedLinesCallback">
@@ -81,37 +46,82 @@
 				</property>
 			</bean>
 		</property>
-		
-		<!-- 
+	</bean>
+	
+	<bean id="fmHbvPatientReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+		<property name="resource" value="file:#{jobParameters[dir]}/fmhbv.txt" />
+		<property name="linesToSkip" value="1" />
+		<property name="encoding" value="UTF-8" />
 		<property name="skippedLinesCallback">
 			<bean class="edu.hiro.converter.batch.HeaderCallbackHandler">
 				<property name="lineTokenizer" ref="lineTokenizer"/>
 				<property name="delimiter" value="&#9;" />
 			</bean>
 		</property>
-		 -->
-		 <!-- org.springframework.batch.sample.domain.order.internal.mapper.HeaderFieldSetMapper -->
-		 <!-- 
-		<property name="lineMapper">
-			
+		<property name="lineMapper">			
 			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
 				<property name="lineTokenizer" ref="lineTokenizer"/>
 				<property name="fieldSetMapper">
-					<bean class="edu.hiro.converter.batch.FmHcvPatientFieldSetMapper"/>
+					<bean class="edu.hiro.converter.batch.FmHbvPatientFieldSetMapper"/>
 				</property>
 			</bean>
 		</property>
-		 -->
 	</bean>
 	
-	<bean id="writer" class="edu.hiro.converter.batch.FmHcvPatientItemWriter">
+	<bean id="fmFirstExamReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+		<property name="resource" value="file:#{jobParameters[dir]}/fmfirstexam.txt" />
+		<property name="linesToSkip" value="1" />
+		<property name="encoding" value="UTF-8" />
+		<property name="skippedLinesCallback">
+			<bean class="edu.hiro.converter.batch.HeaderCallbackHandler">
+				<property name="lineTokenizer" ref="lineTokenizer"/>
+				<property name="delimiter" value="&#9;" />
+			</bean>
+		</property>
+		<property name="lineMapper">			
+			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+				<property name="lineTokenizer" ref="lineTokenizer"/>
+				<property name="fieldSetMapper">
+					<bean class="edu.hiro.converter.batch.FmFirstExamFieldSetMapper"/>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- writers -->
+	
+	<bean id="writer" class="edu.hiro.converter.batch.PatientItemWriter">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
-		
+
+	<!-- jobs -->
+
 	<job id="loadPatients" xmlns="http://www.springframework.org/schema/batch">
-		<step id="readWritePatients">
+		<!-- 
+		<step id="loadFmFirstExamPatients" next="loadFmHbvPatients">
 			<tasklet transaction-manager="transactionManager">
-				<chunk reader="reader" writer="writer" commit-interval="100" skip-limit="1000000">
+				<chunk reader="fmFirstExamReader" writer="writer" commit-interval="100" skip-limit="1000000">
+					<skippable-exception-classes>
+						<include class="java.lang.Exception" />
+						<include class="org.springframework.batch.item.file.FlatFileParseException" />						
+					</skippable-exception-classes>
+				</chunk>
+			</tasklet>
+		</step>
+		<step id="loadFmHbvPatients" next="loadFmHcvPatients">
+			<tasklet transaction-manager="transactionManager">
+				<chunk reader="fmHbvPatientReader" writer="writer" commit-interval="100" skip-limit="1000000">
+					<skippable-exception-classes>
+						<include class="java.lang.Exception" />
+						<include class="org.springframework.batch.item.file.FlatFileParseException" />						
+					</skippable-exception-classes>
+				</chunk>
+			</tasklet>
+		</step>
+		 -->
+		<step id="loadFmHcvPatients">
+			<tasklet transaction-manager="transactionManager">
+				<chunk reader="fmHcvPatientReader" writer="writer" commit-interval="100" skip-limit="1000000">
 					<skippable-exception-classes>
 						<include class="java.lang.Exception" />
 						<include class="org.springframework.batch.item.file.FlatFileParseException" />						
