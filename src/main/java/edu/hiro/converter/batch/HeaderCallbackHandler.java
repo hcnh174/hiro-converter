@@ -54,6 +54,7 @@ public class HeaderCallbackHandler implements LineCallbackHandler {
 	{
 		field=StringHelper.normalize(field);
 		field=StringHelper.replace(field," ","");
+		field=field.toLowerCase();
 		field=convertField(field);
 		return field;
 	}

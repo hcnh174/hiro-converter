@@ -11,25 +11,25 @@ import javax.persistence.Table;
 @Access(value=AccessType.FIELD)
 public class FmFirstExam extends AbstractFmPatient
 {
-	protected @Column(columnDefinition="TEXT") String エンボス;
-	protected @Column(columnDefinition="TEXT") String ふりがな;
-	protected @Column(columnDefinition="TEXT") String 外来医;
-	protected @Column(columnDefinition="TEXT") String 患者名;
-	protected @Column(columnDefinition="TEXT") String 肝研ID;
-	protected @Column(columnDefinition="TEXT") String 初診後転帰;
-	protected @Column(columnDefinition="TEXT") String 初診時積算飲酒量;
-	protected @Column(columnDefinition="TEXT") String 初診時年齢;
-	protected @Column(columnDefinition="TEXT") String 初診日;
-	protected @Column(columnDefinition="TEXT") String 診断状況;
-	protected @Column(columnDefinition="TEXT") String 診断名;
-	protected @Column(columnDefinition="TEXT") String 身長;
-	protected @Column(columnDefinition="TEXT") String 性別;
-	protected @Column(columnDefinition="TEXT") String 生年月日;
-	protected @Column(columnDefinition="TEXT") String 体重;
-	protected @Column(columnDefinition="TEXT") String 年;
-	protected @Column(columnDefinition="TEXT") String HCC;
-	protected @Column(columnDefinition="TEXT") String 備考;
-	protected @Column(columnDefinition="TEXT") String 病期;
+	protected String エンボス;
+	protected String ふりがな;
+	protected String 外来医;
+	protected String 患者名;
+	protected String 肝研id;
+	protected String 初診後転帰;
+	protected String 初診時積算飲酒量;
+	protected String 初診時年齢;
+	protected String 初診日;
+	protected String 診断状況;
+	protected String 診断名;
+	protected String 身長;
+	protected String 性別;
+	protected String 生年月日;
+	protected String 体重;
+	protected String 年;
+	protected String hcc;
+	protected String 備考;
+	protected String 病期;
 
 	public FmFirstExam(){}
 	

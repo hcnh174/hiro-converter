@@ -36,11 +36,11 @@
 			<bean class="edu.hiro.converter.batch.HeaderCallbackHandler">
 				<property name="lineTokenizer" ref="lineTokenizer"/>
 				<property name="delimiter" value="&#9;" />
-				<property name="conversions">
-					<map>
-						<entry key="DBNo" value="DBno"/>					
-					</map>
-				</property>
+<!-- 				<property name="conversions"> -->
+<!-- 					<map> -->
+<!-- 						<entry key="DBNo" value="DBno"/>					 -->
+<!-- 					</map> -->
+<!-- 				</property> -->
 			</bean>
 		</property>
 		<property name="lineMapper">			
@@ -63,7 +63,6 @@
 				<property name="delimiter" value="&#9;" />
 				<property name="conversions">
 					<map>
-						<entry key="FattyLiver" value="fatty_liver"/>
 						<entry key="1変更後の診断" value="変更後の診断1"/>
 						<entry key="1診断変更日" value="診断変更日1"/>
 						<entry key="2変更後の診断" value="変更後の診断2"/>
