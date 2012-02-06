@@ -8,6 +8,7 @@ import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 
+import edu.hiro.converter.ImportHelper;
 import edu.hiro.util.FileHelper;
 import edu.hiro.util.StringHelper;
 
@@ -42,7 +43,7 @@ public class HeaderCallbackHandler implements LineCallbackHandler {
 		String[] fields=StringHelper.splitAsArray(line,""+delimiter); //"\t"
 		for (int index=0;index<fields.length;index++)
 		{
-			fields[index]=adjustFieldName(fields[index]);
+			fields[index]=ImportHelper.adjustFieldName(fields[index]);
 		}		
 		StringHelper.println("Fields: "+StringHelper.join(fields,","),Charsets.UTF_16);
 		System.out.println("fields.length="+fields.length);
@@ -50,23 +51,24 @@ public class HeaderCallbackHandler implements LineCallbackHandler {
 		tokenizer.setDelimiter(delimiter);
 	}
 	
-	private String adjustFieldName(String field)
-	{
-		field=StringHelper.normalize(field);
-		field=StringHelper.replace(field," ","");
-		field=field.toLowerCase();
-		field=convertField(field);
-		return field;
-	}
-	
-
-	private String convertField(String name)
-	{
-		if (this.conversions.containsKey(name))
-		{
-			//StringHelper.println("found converted name for="+name,Charsets.UTF_16);
-			return this.conversions.get(name);
-		}
-		return name;
-	}
+//	private String adjustFieldName(String field)
+//	{
+////		field=StringHelper.normalize(field);
+////		field=StringHelper.replace(field," ","");
+////		field=field.toLowerCase();
+//		field=ImportHelper.adjustFieldName(field, this.conversions);
+//		field=convertField(field);
+//		return field;
+//	}
+//	
+//
+//	private String convertField(String name)
+//	{
+//		if (this.conversions.containsKey(name))
+//		{
+//			//StringHelper.println("found converted name for="+name,Charsets.UTF_16);
+//			return this.conversions.get(name);
+//		}
+//		return name;
+//	}
 }

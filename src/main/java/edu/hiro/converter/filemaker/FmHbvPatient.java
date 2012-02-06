@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="fmhbv")
 @Access(value=AccessType.FIELD)
-public class FmHbvPatient extends AbstractFmPatient
+public class FmHbvPatient extends AbstractPatient
 {
 	protected String dbno;
 	protected String 患者名;
