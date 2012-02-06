@@ -101,7 +101,7 @@ public abstract class AbstractBloodTestLoader
 			if (field.equals("日付"))
 			{
 				if (value.trim().equals(""))
-					continue;
+					return;
 				value=fixDate(value);
 			}
 			//StringHelper.println("set "+field+"="+value);
