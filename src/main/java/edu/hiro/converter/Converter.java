@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
+import com.google.common.base.Charsets;
+
 import edu.hiro.converter.batch.BatchImportService;
 import edu.hiro.converter.batch.BatchImportServiceImpl;
 import edu.hiro.converter.batch.HeaderCallbackHandler;
@@ -17,17 +19,12 @@ public class Converter
 {	
 	public static void main(String[] argv)
 	{
-		String dir="h:/patientdb.etc";
-		String str="ＮＥＬＳＯＮnelson";
-		//StringHelper.println(Normalizer.normalize(str,Normalizer.NFKD));
-		//StringHelper.println(StringHelper.normalize(str));
+		//StringHelper.println("ｱﾚﾙｷﾞｰ="+StringHelper.normalize("ｱﾚﾙｷﾞｰ"),Charsets.UTF_16);
 		
-		
-		HeaderCallbackHandler handler=new HeaderCallbackHandler();
-		handler.handleLine(str+"\t"+str);
-		
+		//String dir="h:/patientdb.etc";
+		String dir="d:/projects/patientdb.etc";
 		BatchImportService batchService=new BatchImportServiceImpl();
-		//batchService.loadPatients(dir);
+		batchService.loadPatients(dir);
 	}
 	
 //	public static void main(String[] argv)

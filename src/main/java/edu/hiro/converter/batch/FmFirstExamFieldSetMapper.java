@@ -9,23 +9,14 @@ public class FmFirstExamFieldSetMapper extends AbstractPatientFieldSetMapper<FmF
 	{
 		return new FmFirstExam();
 	}
-	
-//	@Override
-//	protected Field getFieldAccessor(String name) throws SecurityException, NoSuchFieldException
-//	{
-//		return FmFirstExam.class.getDeclaredField(name);
-//	}
-	
-	public FmFirstExamFieldSetMapper()
-	{
-		addConversion("エンボス","患者ID");
-		addConversion("肝研ＩＤ","肝研ID");
-		addConversion("ふりがな","フリガナ");
-		addConversion("紹介元〒","紹介元zip");
-		addConversion("身長","BH");
-		addConversion("体重","BW");
-		addConversion("ＢＭＩ","BMI");
-		addConversion("その他の合併症１","その他の合併症1");
-		addConversion("肝疾患家族歴１","肝疾患家族歴1");
-	}
+
+//		addConversion("エンボス","患者ID");
+//		addConversion("肝研ＩＤ","肝研ID");
+//		addConversion("ふりがな","フリガナ");
+//		addConversion("紹介元〒","紹介元zip");
+//		addConversion("身長","BH");
+//		addConversion("体重","BW");
+//		addConversion("ＢＭＩ","BMI");
+//		addConversion("その他の合併症１","その他の合併症1");
+//		addConversion("肝疾患家族歴１","肝疾患家族歴1");
 }

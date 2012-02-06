@@ -29,13 +29,18 @@
 	<!-- readers -->
 
 	<bean id="fmHcvPatientReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
-		<property name="resource" value="file:#{jobParameters[dir]}/fmhcv-test2.txt" />
+		<property name="resource" value="file:#{jobParameters[dir]}/fmhcv.txt" />
 		<property name="linesToSkip" value="1" />
-		<property name="encoding" value="UTF-8" />
+		<property name="encoding" value="UTF-16" />
 		<property name="skippedLinesCallback">
 			<bean class="edu.hiro.converter.batch.HeaderCallbackHandler">
 				<property name="lineTokenizer" ref="lineTokenizer"/>
 				<property name="delimiter" value="&#9;" />
+				<property name="conversions">
+					<map>
+						<entry key="DBNo" value="DBno"/>					
+					</map>
+				</property>
 			</bean>
 		</property>
 		<property name="lineMapper">			
@@ -51,11 +56,25 @@
 	<bean id="fmHbvPatientReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
 		<property name="resource" value="file:#{jobParameters[dir]}/fmhbv.txt" />
 		<property name="linesToSkip" value="1" />
-		<property name="encoding" value="UTF-8" />
+		<property name="encoding" value="UTF-16" />
 		<property name="skippedLinesCallback">
 			<bean class="edu.hiro.converter.batch.HeaderCallbackHandler">
 				<property name="lineTokenizer" ref="lineTokenizer"/>
 				<property name="delimiter" value="&#9;" />
+				<property name="conversions">
+					<map>
+						<entry key="FattyLiver" value="fatty_liver"/>
+						<entry key="1変更後の診断" value="変更後の診断1"/>
+						<entry key="1診断変更日" value="診断変更日1"/>
+						<entry key="2変更後の診断" value="変更後の診断2"/>
+						<entry key="2診断変更日" value="診断変更日2"/>
+						
+						<entry key="1変更後の診断" value="変更後の診断1"/>
+						<entry key="1診断変更日" value="診断変更日1"/>
+						<entry key="2変更後の診断" value="変更後の診断2"/>
+						<entry key="2診断変更日	" value="診断変更日2"/>
+					</map>
+				</property>
 			</bean>
 		</property>
 		<property name="lineMapper">			
@@ -71,7 +90,7 @@
 	<bean id="fmFirstExamReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
 		<property name="resource" value="file:#{jobParameters[dir]}/fmfirstexam.txt" />
 		<property name="linesToSkip" value="1" />
-		<property name="encoding" value="UTF-8" />
+		<property name="encoding" value="UTF-16" />
 		<property name="skippedLinesCallback">
 			<bean class="edu.hiro.converter.batch.HeaderCallbackHandler">
 				<property name="lineTokenizer" ref="lineTokenizer"/>
@@ -97,7 +116,6 @@
 	<!-- jobs -->
 
 	<job id="loadPatients" xmlns="http://www.springframework.org/schema/batch">
-		<!-- 
 		<step id="loadFmFirstExamPatients" next="loadFmHbvPatients">
 			<tasklet transaction-manager="transactionManager">
 				<chunk reader="fmFirstExamReader" writer="writer" commit-interval="100" skip-limit="1000000">
@@ -117,8 +135,7 @@
 					</skippable-exception-classes>
 				</chunk>
 			</tasklet>
-		</step>
-		 -->
+		</step>		
 		<step id="loadFmHcvPatients">
 			<tasklet transaction-manager="transactionManager">
 				<chunk reader="fmHcvPatientReader" writer="writer" commit-interval="100" skip-limit="1000000">
