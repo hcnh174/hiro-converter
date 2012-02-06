@@ -98,7 +98,10 @@ public class Converter
 		String folder="d:/projects/patientdb.etc/dataroom/血液データ(Excel)/C型";
 		//converterService.loadHcvBloodTests(folder);
 		folder="d:/projects/patientdb.etc/dataroom/血液データ(Excel)/B型";
-		converterService.loadHbvBloodTests(folder);
+		//converterService.loadHbvBloodTests(folder);
+		folder="h:/patientdb.etc/dataroom/IFNシート/IFN";
+		//folder="h:/patientdb.etc/dataroom/IFNシート/IFN/DB.701-800。";
+		converterService.loadPegribaSpreadsheets(folder);
 		return true;
 	}
 	

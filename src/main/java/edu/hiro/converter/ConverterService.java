@@ -7,4 +7,5 @@ public interface ConverterService
 {
 	void loadHcvBloodTests(String folder);
 	void loadHbvBloodTests(String folder);
+	void loadPegribaSpreadsheets(String folder);
 }

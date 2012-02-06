@@ -9,8 +9,13 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import com.google.common.collect.Maps;
+
+import edu.hiro.converter.ImportHelper;
 import edu.hiro.converter.filemaker.PegribaBloodTest;
 import edu.hiro.converter.filemaker.PegribaPatient;
+import edu.hiro.converter.repositories.PegribaBloodTestRepository;
+import edu.hiro.converter.repositories.PegribaPatientRepository;
 import edu.hiro.util.BeanHelper;
 import edu.hiro.util.CException;
 import edu.hiro.util.DateHelper;
@@ -22,42 +27,46 @@ import edu.hiro.util.StringHelper;
 
 public class PegribaSpreadsheetReader
 {	
-	//protected List<String> zeroAsEmptyFields=getZeroAsEmptyFields();
+	protected static final String filepattern=".*[0-9]+-[0-9]+\\.xlsx";
+	protected static final String sheetpattern="[0-9]+";
+	
 	private MessageWriter writer=new MessageWriter();
 	private ExcelHelper excelhelper=new ExcelHelper();
-	private BeanHelper beanhelper=new BeanHelper();
-	private List<PegribaPatient> patients=new ArrayList<PegribaPatient>();
+	//private BeanHelper beanhelper=new BeanHelper();
+	private ImportHelper importhelper=new ImportHelper();
 	
 	//////////////////////////////////////////////////////////////////////////////////
 
-	public PegribaSpreadsheetReader(){}
+	private PegribaPatientRepository pegribaPatientRepository;
+	private PegribaBloodTestRepository pegribaBloodTestRepository;
 	
-	public PegribaSpreadsheetReader(MessageWriter writer)
+	public PegribaSpreadsheetReader(PegribaPatientRepository pegribaPatientRepository,
+			PegribaBloodTestRepository pegribaBloodTestRepository)
 	{
-		this.writer=writer;
-	}
-	
-	public List<PegribaPatient> getPatients()
-	{
-		return patients;
+		this.pegribaPatientRepository=pegribaPatientRepository;
+		this.pegribaBloodTestRepository=pegribaBloodTestRepository;
 	}
 	
 	public void loadFolder(String dir)
 	{
 		dir=FileHelper.normalizeDirectory(dir);
 		writer.message("loading folder="+dir);
-		List<String> filenames=FileHelper.listFiles(dir, ".xlsx");
+		List<String> filenames=FileHelper.listFilesRecursively(dir, ".xlsx");
 		for (String filename : filenames)
 		{
-			//System.out.println("filename="+filename);
-			if (filename.matches("[0-9]+-[0-9]+.xls"))
+			if (!ImportHelper.filenameMatches(filename, filepattern))
+				continue;
+			try
 			{
-				loadSpreadsheet(dir+filename);
-				// return; // stop after 1 iteration
+				loadSpreadsheet(filename);
+			}
+			catch(Exception e)
+			{
+				System.err.println("problem with file "+filename+", skipping");
 			}
 		}
 	}
-	
+
 	public void loadSpreadsheet(String filename)
 	{
 		writer.message("loading spreadsheet="+filename);
@@ -65,39 +74,38 @@ public class PegribaSpreadsheetReader
 		for (int sheetnum=0;sheetnum<workbook.getNumberOfSheets();sheetnum++)
 		{
 			Sheet sheet=workbook.getSheetAt(sheetnum);
-			loadSheet(sheet);
+			if (!ImportHelper.sheetMatches(sheet,sheetpattern))
+				continue;
+			try
+			{
+				loadSheet(sheet);
+			}
+			catch(Exception e)
+			{
+				System.err.println("problem with sheet "+sheet.getSheetName()+", skipping");
+			}
 		}
-		writer.write("finished");
-		writer.br();
 	}
 	
 	private PegribaPatient createPegribaPatient(Sheet sheet)
 	{
-		Integer pegribaDBno=MathHelper.parseInt(sheet.getSheetName());
-		if (pegribaDBno==null)
+		Integer id=MathHelper.parseInt(sheet.getSheetName());
+		if (id==null)
 			throw new CException("pegribaDBno is null for sheet "+sheet.getSheetName());
-		PegribaPatient patient=new PegribaPatient(pegribaDBno);
-		patients.add(patient);
-		return patient;
+		return new PegribaPatient(id);
 	}
 	
 	private void loadSheet(Sheet sheet)
 	{
 		writer.write(sheet.getSheetName()+" ");
-		//System.out.println("sheet: "+sheet.getSheetName());
-		if (!MathHelper.isInteger(sheet.getSheetName()))
-		{
-			writer.message("sheet "+sheet.getSheetName()+" is not a number. skipping.");
-			return;
-		}
 		PegribaPatient patient=createPegribaPatient(sheet);
 	
-		setProperty(sheet,patient,"DBno",39,22,1,2);
-		setProperty(sheet,patient,"投与開始日",3,1,1,4); //投与開始日(半角入力）
-		setProperty(sheet,patient,"投与終了日",6,1,1,4); //投与終了日（半角入力）
+		setProperty(sheet,patient,"dbno",39,22,1,2);//DBno
+		setProperty(sheet,patient,"投与開始日",3,1,1,4);
+		setProperty(sheet,patient,"投与終了日",6,1,1,4);
 		setProperty(sheet,patient,"病院",3,6,1,2);
 		setProperty(sheet,patient,"医師",3,8,1,2);
-		setProperty(sheet,patient,"病院ID",3,10,1,2);
+		setProperty(sheet,patient,"病院id",3,10,1,2);//病院ID
 		setProperty(sheet,patient,"姓",3,12);
 		setProperty(sheet,patient,"名",3,13);
 		setProperty(sheet,patient,"生年月日",3,14,1,2);
@@ -108,8 +116,8 @@ public class PegribaSpreadsheetReader
 		setProperty(sheet,patient,"肝組織",3,20);
 		setProperty(sheet,patient,"肝生検",3,21,1,2);
 		setProperty(sheet,patient,"ICG",3,23);
-		setProperty(sheet,patient,"Genotype",3,24);
-		setProperty(sheet,patient,"IFN既往",3,25);
+		setProperty(sheet,patient,"genotype",3,24);//Genotype
+		setProperty(sheet,patient,"ifn既往",3,25);
 		setProperty(sheet,patient,"効果判定",3,26,1,2);
 		
 		//投与開始前検査 - 投与開始時データ
@@ -150,15 +158,15 @@ public class PegribaSpreadsheetReader
 		setProperty(sheet,patient,"血糖終了",7,23); //血糖(FBS)終了
 		setProperty(sheet,patient,"INS終了",7,24); //INS(ｲﾝｽﾘﾝ)終了
 		
-		setProperty(sheet,patient,"効果判定Bio",9,25,2,3);
-		setProperty(sheet,patient,"効果判定Viro",11,25,2,3);
+		setProperty(sheet,patient,"効果判定bio",9,25,2,3);//効果判定Bio
+		setProperty(sheet,patient,"効果判定viro",11,25,2,3);//効果判定Viro
 		
 		//Pegｲﾝﾄﾛﾝ
-		setProperty(sheet,patient,"Pegｲﾝﾄﾛﾝ減量",15,24);
-		setProperty(sheet,patient,"Pegｲﾝﾄﾛﾝ時期",15,25);
-		setProperty(sheet,patient,"Pegｲﾝﾄﾛﾝ変更後の量",15,26,1,2);
-		setProperty(sheet,patient,"Pegｲﾝﾄﾛﾝ備考",16,24,3,2);
-		setProperty(sheet,patient,"Pegｲﾝﾄﾛﾝ総投与量",17,26,2,2);
+		setProperty(sheet,patient,"pegｲﾝﾄﾛﾝ減量",15,24);//Pegｲﾝﾄﾛﾝ減量
+		setProperty(sheet,patient,"pegｲﾝﾄﾛﾝ時期",15,25);
+		setProperty(sheet,patient,"pegｲﾝﾄﾛﾝ変更後の量",15,26,1,2);
+		setProperty(sheet,patient,"pegｲﾝﾄﾛﾝ備考",16,24,3,2);
+		setProperty(sheet,patient,"pegｲﾝﾄﾛﾝ総投与量",17,26,2,2);
 		
 		//ﾚﾍﾞﾄｰﾙ
 		setProperty(sheet,patient,"ﾚﾍﾞﾄｰﾙ減量",21,24);
@@ -171,19 +179,88 @@ public class PegribaSpreadsheetReader
 		setProperty(sheet,patient,"ダブル登録",39,26,1,2);
 		setProperty(sheet,patient,"SNPsIDch",41,22);
 		setProperty(sheet,patient,"SNPsIDno",41,23);
-		setProperty(sheet,patient,"匿名化No",41,24,1,2);
+		setProperty(sheet,patient,"匿名化no",41,24,1,2);//匿名化No
+		
+		//patient.年齢=DateHelper.getDurationInYears(patient.投与開始日,patient.生年月日);
+		//StringHelper.println(patient.toString());
+		pegribaPatientRepository.save(patient);
 		
 		loadBloodTests(sheet,patient);
-		
-		postProcess(patient);
 	}
+	
+	private void setProperty(Sheet sheet, Object obj, String property, int row, int col)
+	{
+		setProperty(sheet,obj,property,row,col,1,1);
+	}
+
+	private void setProperty(Sheet sheet, Object obj, String property, int row, int col, int rowspan, int colspan)
+	{
+		//importhelper.setProperty(obj,property,"test");
+		Object value=excelhelper.getCellValue(sheet,row-1,col-1); // POI is 0-based
+		value=adjustValue(property,value);
+		if (value==null)
+			return;
+		importhelper.setProperty(obj,property,value.toString());
+	}
+	
+	private Object adjustValue(String property, Object value)
+	{
+		if (value==null)
+			return null;
+		if (property.equals("性別") && ImportHelper.Sex.find(value.toString())==null)
+			return null;
+		if (isND(property,value))
+			return null;
+		//System.out.println("setting "+obj.getClass().getName()+" property: "+property+"=["+value+"] ("+value.getClass().getCanonicalName()+")");
+		if (value instanceof Date)
+			return adjustDateValue(property,value);
+		if (isZeroAsEmptyField(property,value))
+			return null;
+		if (value instanceof Double && (value.toString().indexOf(".0")!=-1) || value.toString().indexOf("E")!=-1)
+		{
+			Double dvalue=MathHelper.parseDouble(value.toString());
+			if (dvalue!=null)
+				value=StringHelper.formatDecimal(dvalue,0);
+			//System.out.println("weird double property: "+property+" value="+value);
+		}
+		if (value!=null)
+			value=StringHelper.normalize(value.toString());
+		return value;
+	}
+	
+	private String adjustDateValue(String property, Object value)
+	{
+		Date date=(Date)value;
+		int year=DateHelper.getYear(date);
+		if (year<1902)
+			return null;
+		return DateHelper.format(date,DateHelper.DATE_PATTERN);
+	}
+	
+	private boolean isND(String property, Object value)
+	{
+		if (!(value instanceof String))
+			return false;
+		String svalue=value.toString().trim();
+		return svalue.equals("ND") || svalue.equals("ＮＤ");
+	}
+	
+	private boolean isZeroAsEmptyField(String property, Object value)
+	{
+		if (!(value instanceof Double))
+			return false;
+		double dvalue=((Double)value).doubleValue();
+		if (dvalue!=0)
+			return false;
+		return true;
+	}
+	
+	///////////////////////////////////////////////////////////////
 	
 	private void loadBloodTests(Sheet sheet, PegribaPatient patient)
 	{		
 		PegribaBloodTest.Type[] weeks=PegribaBloodTest.Type.values();
-		//List<String> weekfields=StringHelper.split("予定日,日付,WBC,好中球分画,Hb,Plt,AST,ALT,KL6,gamaGTP,HCV定量,HCV定性,減量中止の有無,Pegイントロン,レベトール",",");
-
-		Map<PegribaBloodTest.Type,PegribaBloodTest> bloodtests=new LinkedHashMap<PegribaBloodTest.Type,PegribaBloodTest>();
+		Map<PegribaBloodTest.Type,PegribaBloodTest> bloodtests=Maps.newLinkedHashMap();
 		
 		int col=3;
 		for (int i=0;i<=20;i++)
@@ -210,125 +287,17 @@ public class PegribaSpreadsheetReader
 			col++;
 		}
 		
-//		for (PegribaBloodTest bloodtest : bloodtests.values())
-//		{
-//			if (!bloodtest.isEmpty())
-//				patient.add(bloodtest);
-//		}
+		for (PegribaBloodTest bloodtest : bloodtests.values())
+		{
+			if (!bloodtest.isEmpty())
+				pegribaBloodTestRepository.save(bloodtest);
+		}
 	}
-	
-	private void postProcess(PegribaPatient patient)
-	{
-		patient.年齢=DateHelper.getDurationInYears(patient.投与開始日,patient.生年月日);
-	}
-	
+
 	private PegribaBloodTest findOrCreateBloodTest(PegribaPatient patient, Map<PegribaBloodTest.Type,PegribaBloodTest> bloodtests, PegribaBloodTest.Type type)
 	{
 		if (!bloodtests.containsKey(type))
-			bloodtests.put(type,new PegribaBloodTest(patient.pegribaDBno,type));
+			bloodtests.put(type,new PegribaBloodTest(patient.id,type));
 		return bloodtests.get(type);
-	}
-
-	private void setProperty(Sheet sheet, Object obj, String property, int row, int col)
-	{
-		setProperty(sheet,obj,property,row,col,1,1);
-	}
-		
-	//private void setProperty(Sheet sheet, Object obj, String property, int row, int col)
-	private void setProperty(Sheet sheet, Object obj, String property, int row, int col, int rowspan, int colspan)
-	{
-		Object value=excelhelper.getCellValue(sheet,row-1,col-1); // POI is 0-based
-		value=adjustValue(property,value);
-		if (value==null)
-		{
-			//System.out.println("property "+property+" is null. skipping.");
-			return;
-		}
-		beanhelper.setPropertyFromString(obj,property,value.toString());
-	}
-	
-	private Object adjustValue(String property, Object value)
-	{
-		if (value==null)
-			return null;
-		if (property.equals("性別") && PegribaService.Sex.find(value.toString())==null)
-			return null;
-		if (isND(property,value))
-			return null;
-		//System.out.println("setting "+obj.getClass().getName()+" property: "+property+"=["+value+"] ("+value.getClass().getCanonicalName()+")");
-		if (value instanceof Date)
-			return adjustDateValue(property,value);
-		if (isZeroAsEmptyField(property,value))
-			return null;
-		if (value instanceof Double && (value.toString().indexOf(".0")!=-1) || value.toString().indexOf("E")!=-1)
-		{
-			Double dvalue=MathHelper.parseDouble(value.toString());
-			if (dvalue!=null)
-				value=StringHelper.formatDecimal(dvalue,0);
-			//System.out.println("weird double property: "+property+" value="+value);
-		}
-		return value;
-	}
-	
-	private String adjustDateValue(String property, Object value)
-	{
-		Date date=(Date)value;
-		int year=DateHelper.getYear(date);
-		if (year<1902)
-			return null;
-		return DateHelper.format(date,DateHelper.DATE_PATTERN);
-	}
-	
-	/*
-	public static String guessPattern(String value)
-	{
-		if (value.matches("[0-9]{4}/[0-]{1,2}/[0-9]{1,2}"))
-			return DateHelper.YYYYMMDD_PATTERN;
-		else if (value.matches("[0-]{1,2}/[0-9]{1,2}/[0-9]{4}"))
-			return DateHelper.MMDDYYYY_PATTERN;
-		else throw new CException("Cannot guess pattern for date: "+value);
-	}
-	*/
-	
-	private boolean isND(String property, Object value)
-	{
-		if (!(value instanceof String))
-			return false;
-		String svalue=value.toString().trim();
-		return svalue.equals("ND") || svalue.equals("ＮＤ");
-	}
-	
-	private boolean isZeroAsEmptyField(String property, Object value)
-	{
-		if (!(value instanceof Double))
-			return false;
-		//if (!zeroAsEmptyFields.contains(property))
-		//	return false;
-		double dvalue=((Double)value).doubleValue();
-		if (dvalue!=0)
-			return false;
-		return true;
-	}
-	
-	/*
-	private List<String> getZeroAsEmptyFields()
-	{
-		List<String> fields=new ArrayList<String>();
-		fields.add("ダブル登録");		
-		fields.add("医師");
-		fields.add("病院ID");
-		fields.add("Pegイントロン");
-		fields.add("レベトール");		
-		return fields;
-	}
-	*/
-	
-	public static void main(String[] argv)
-	{
-		String dir=argv[0];		
-		PegribaSpreadsheetReader reader=new PegribaSpreadsheetReader();
-		System.out.println("importing data from directory "+dir);
-		reader.loadFolder(dir);
-		reader.getPatients(); //List<PegribaPatient> patients=
 	}
 }

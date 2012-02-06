@@ -41,7 +41,7 @@ public abstract class AbstractBloodTestLoader
 	{
 		for (String filename : FileHelper.listFiles(folder,".xlsx",true))
 		{
-			if (!filenameMatches(filename))
+			if (!ImportHelper.filenameMatches(filename,this.filepattern))
 				continue;
 			try
 			{
@@ -61,7 +61,7 @@ public abstract class AbstractBloodTestLoader
 		for (int index=0;index<workbook.getNumberOfSheets();index++)
 		{
 			Sheet sheet=workbook.getSheetAt(index);
-			if (sheetMatches(sheet))
+			if (ImportHelper.sheetMatches(sheet,sheetpattern))
 				loadSheet(sheet);
 		}
 	}
@@ -153,6 +153,7 @@ public abstract class AbstractBloodTestLoader
 		return values;
 	}
 	
+	/*
 	private boolean filenameMatches(String path)
 	{
 		String filename=FileHelper.stripPath(path);
@@ -161,7 +162,8 @@ public abstract class AbstractBloodTestLoader
 			System.out.println("filename "+filename+" does not match pattern "+filepattern+". skipping. ("+path+")");
 		return matches;
 	}	
-
+	
+	
 	private boolean sheetMatches(Sheet sheet)
 	{
 		String name=sheet.getSheetName();
@@ -172,4 +174,5 @@ public abstract class AbstractBloodTestLoader
 			System.out.println("sheet "+name+" does not match pattern "+sheetpattern+". skipping.");
 		return matches;
 	}
+	*/
 }
