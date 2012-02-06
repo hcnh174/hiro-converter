@@ -30,11 +30,4 @@ public class FmFirstExam extends AbstractFmPatient
 	protected String hcc;
 	protected String 備考;
 	protected String 病期;
-
-	public FmFirstExam(){}
-	
-	public FmFirstExam(int rowID)
-	{
-		super(rowID);
-	}
 }

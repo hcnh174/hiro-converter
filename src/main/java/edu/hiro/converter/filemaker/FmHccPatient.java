@@ -245,11 +245,4 @@ public class FmHccPatient extends AbstractFmPatient
 	protected String size3="";
 	protected String size4="";
 	protected String size5="";
-
-	public FmHccPatient(){}
-	
-	public FmHccPatient(int rowID)
-	{
-		super(rowID);
-	}
 }

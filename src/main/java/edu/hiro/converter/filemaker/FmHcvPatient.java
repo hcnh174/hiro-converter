@@ -92,11 +92,4 @@ public class FmHcvPatient extends AbstractFmPatient
 	protected String 診断;
 	protected String dbno;
 	protected String genotype;
-
-	public FmHcvPatient(){}
-	
-	public FmHcvPatient(int rowID)
-	{
-		super(rowID);
-	}
 }

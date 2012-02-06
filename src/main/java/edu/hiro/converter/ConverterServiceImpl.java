@@ -1,52 +1,7 @@
 package edu.hiro.converter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.google.common.collect.Lists;
-
-import edu.hiro.converter.access.AbstractPatientItem;
-import edu.hiro.converter.access.AccessPatient;
-import edu.hiro.converter.filemaker.FmFirstExam;
-import edu.hiro.converter.filemaker.FmHbvPatient;
-import edu.hiro.converter.filemaker.FmHcvPatient;
-import edu.hiro.converter.readers.AccessPatientTableReader;
-import edu.hiro.converter.readers.FmFirstExamTableReader;
-import edu.hiro.converter.readers.FmHbvTableReader;
-import edu.hiro.converter.readers.FmHccTableReader;
-import edu.hiro.converter.readers.FmHcvTableReader;
-import edu.hiro.converter.readers.ItemTableReader;
-import edu.hiro.converter.readers.TableReader;
-import edu.hiro.converter.repositories.AccessPatientRepository;
-import edu.hiro.converter.repositories.BasicInfoItemRepository;
-import edu.hiro.converter.repositories.BiopsyAnonymizationItemRepository;
-import edu.hiro.converter.repositories.BiopsyItemRepository;
-import edu.hiro.converter.repositories.FmFirstExamRepository;
-import edu.hiro.converter.repositories.FmHbvPatientRepository;
-import edu.hiro.converter.repositories.FmHccPatientRepository;
-import edu.hiro.converter.repositories.FmHcvPatientRepository;
-import edu.hiro.converter.repositories.HospitalizationItemRepository;
-import edu.hiro.converter.repositories.InterferonItemRepository;
-import edu.hiro.converter.repositories.PrimaryDiseaseItemRepository;
-import edu.hiro.converter.repositories.SnpAnonymizationItemRepository;
-import edu.hiro.converter.repositories.SnpItemRepository;
-import edu.hiro.util.BeanHelper;
-import edu.hiro.util.CException;
-import edu.hiro.util.CIdList;
-import edu.hiro.util.CTable;
-import edu.hiro.util.FileHelper;
-import edu.hiro.util.IPaging;
-import edu.hiro.util.StringHelper;
 
 @Service("converterService")
 @Transactional
@@ -55,11 +10,7 @@ public class ConverterServiceImpl implements ConverterService
 	public static final String TABLE_SUFFIX=".txt";
 	public static final String MERGE_SUFFIX=".mer";
 	
-	@Resource(name="converterDao")
-	protected ConverterDao dao;	
-	
-	public ConverterDao getDao(){return this.dao;}
-
+	/*
 	//////////////////////////////////////////////////////////////////
 	
 	public List<AccessPatient> getAccessPatients()
@@ -168,15 +119,7 @@ public class ConverterServiceImpl implements ConverterService
 		TableReader reader=new FmHbvTableReader(this,params);
 		reader.loadInBatches(table);
 	}
-	
-	/*
-	private void loadFmHcvTable(CTable table, ImportParams params)
-	{
-		TableReader reader=new FmHcvTableReader(this,params);
-		reader.loadInBatches(table);
-	}
-	*/
-	
+
 	private void loadFmHcvTable(CTable table, ImportParams params)
 	{
 		TableReader reader=new FmHcvTableReader(this,params,fmHcvPatientRepository);
@@ -343,4 +286,5 @@ public class ConverterServiceImpl implements ConverterService
 		}
 		return newvalues;
 	}
+	*/
 }

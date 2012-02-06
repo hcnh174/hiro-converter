@@ -166,11 +166,4 @@ public class FmHbvPatient extends AbstractFmPatient
 	protected String 死因;
 	protected String 死亡年月日;
 	protected String 死亡詳細備考;
-
-	public FmHbvPatient(){}
-	
-	public FmHbvPatient(int rowID)
-	{
-		super(rowID);
-	}
 }

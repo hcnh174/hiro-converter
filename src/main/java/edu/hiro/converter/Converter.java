@@ -19,8 +19,7 @@ public class Converter
 {	
 	public static void main(String[] argv)
 	{
-		//StringHelper.println("ｱﾚﾙｷﾞｰ="+StringHelper.normalize("ｱﾚﾙｷﾞｰ"),Charsets.UTF_16);
-		
+		//StringHelper.println("ｱﾚﾙｷﾞｰ="+StringHelper.normalize("ｱﾚﾙｷﾞｰ"),Charsets.UTF_16);		
 		//String dir="h:/patientdb.etc";
 		String dir="d:/projects/patientdb.etc";
 		BatchImportService batchService=new BatchImportServiceImpl();
@@ -52,6 +51,7 @@ public class Converter
 //		}
 //	}
 
+	/*
 	private Params params;
 	private MessageWriter writer=new MessageWriter();
 	private GenericXmlApplicationContext applicationContext=null;
@@ -134,4 +134,5 @@ public class Converter
 	{
 		return (ConverterService)getApplicationContext().getBean("converterService");
 	}
+	*/
 }

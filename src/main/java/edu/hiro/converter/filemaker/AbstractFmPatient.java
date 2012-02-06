@@ -24,5 +24,5 @@ public abstract class AbstractFmPatient extends AbstractEntity
 	}
 	
 	public Integer getRowID(){return this.rowID;}
-	public void setRowID(final Integer rowID){this.rowID=rowID;}
+	//public void setRowID(final Integer rowID){this.rowID=rowID;}
 }
