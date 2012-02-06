@@ -64,7 +64,7 @@ public class HeaderCallbackHandler implements LineCallbackHandler {
 	{
 		if (this.conversions.containsKey(name))
 		{
-			StringHelper.println("found converted name for="+name,Charsets.UTF_16);
+			//StringHelper.println("found converted name for="+name,Charsets.UTF_16);
 			return this.conversions.get(name);
 		}
 		return name;
