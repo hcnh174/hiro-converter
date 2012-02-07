@@ -20,13 +20,11 @@ public class HeaderCallbackHandler implements LineCallbackHandler {
 	
 	public void setLineTokenizer(DelimitedLineTokenizer tokenizer)
 	{
-		//System.out.println("setting tokenizer: "+tokenizer);
 		this.tokenizer=tokenizer;
 	}
 	
 	public void setDelimiter(char delimiter)
 	{
-		//System.out.println("setting delimiter: "+delimiter);
 		this.delimiter=delimiter;
 	}
 	
@@ -43,32 +41,11 @@ public class HeaderCallbackHandler implements LineCallbackHandler {
 		String[] fields=StringHelper.splitAsArray(line,""+delimiter); //"\t"
 		for (int index=0;index<fields.length;index++)
 		{
-			fields[index]=ImportHelper.adjustFieldName(fields[index]);
+			fields[index]=ImportHelper.adjustFieldName(fields[index],conversions);
 		}		
 		StringHelper.println("Fields: "+StringHelper.join(fields,","),Charsets.UTF_16);
 		System.out.println("fields.length="+fields.length);
 		tokenizer.setNames(fields);
 		tokenizer.setDelimiter(delimiter);
 	}
-	
-//	private String adjustFieldName(String field)
-//	{
-////		field=StringHelper.normalize(field);
-////		field=StringHelper.replace(field," ","");
-////		field=field.toLowerCase();
-//		field=ImportHelper.adjustFieldName(field, this.conversions);
-//		field=convertField(field);
-//		return field;
-//	}
-//	
-//
-//	private String convertField(String name)
-//	{
-//		if (this.conversions.containsKey(name))
-//		{
-//			//StringHelper.println("found converted name for="+name,Charsets.UTF_16);
-//			return this.conversions.get(name);
-//		}
-//		return name;
-//	}
 }

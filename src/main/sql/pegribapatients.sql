@@ -1,11 +1,12 @@
 -- Table: pegribapatients
 
-DROP TABLE pegribapatients;
+DROP TABLE IF EXISTS pegribapatients;
 
 CREATE TABLE pegribapatients
 (
-	id integer NOT NULL,
+	rowid serial NOT NULL,
 	
+	pegribadbno TEXT,
 	dbno TEXT,
 	シート名 TEXT,
 	ダブル登録 TEXT,
@@ -77,7 +78,7 @@ CREATE TABLE pegribapatients
 	ins開始 TEXT,
 	ins終了 TEXT,
 	
-	CONSTRAINT pegribapatients_pkey PRIMARY KEY (id)
+	CONSTRAINT pegribapatients_pkey PRIMARY KEY (rowid)
 )
 WITH (
   OIDS=FALSE

@@ -4,4 +4,4 @@ target
 log.roo
 *.class
 *.aj
-
+src/main/sql/setup.sql

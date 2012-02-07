@@ -30,8 +30,8 @@ public final class DatabaseHelper
 	
 	public static String concatenateScripts(String folder)
 	{
-		String filelist=folder+"files.txt";
-		String setupfile=folder+"setup.sql";
+		String filelist=folder+"/files.txt";
+		FileHelper.checkExists(filelist);
 		
 		StringBuilder buffer=new StringBuilder();
 		String str=FileHelper.readFile(filelist);
@@ -39,13 +39,22 @@ public final class DatabaseHelper
 		{
 			if (filename.indexOf('#')==0)
 				continue;
-			filename=folder+filename;
+			filename=folder+"/"+filename;
 			String sql=FileHelper.readFile(filename);
 			buffer.append(sql);
 			buffer.append("\n");
 		}
-		FileHelper.writeFile(setupfile,buffer.toString());
-		return setupfile;
+		return buffer.toString();
+	}
+	
+	public static void createSetupFile(String folder)
+	{
+		String setupfile=folder+"/setup.sql";
+		if (FileHelper.exists(setupfile))
+			return;
+		System.out.println("creating database setup file: "+setupfile);
+		String str=concatenateScripts(folder);		
+		FileHelper.writeFile(setupfile,str);
 	}
 	
 	public static void setParams(Query query, Map<String,Object> params)

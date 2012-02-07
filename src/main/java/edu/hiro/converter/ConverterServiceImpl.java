@@ -1,21 +1,42 @@
 package edu.hiro.converter;
 
+import org.springframework.batch.core.JobExecution;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.hiro.converter.excel.HbvBloodTestLoader;
 import edu.hiro.converter.excel.HcvBloodTestLoader;
 import edu.hiro.converter.pegriba.PegribaSpreadsheetReader;
+import edu.hiro.converter.repositories.AccessPatientRepository;
+import edu.hiro.converter.repositories.FmFirstExamRepository;
+import edu.hiro.converter.repositories.FmHbvPatientRepository;
+import edu.hiro.converter.repositories.FmHcvPatientRepository;
 import edu.hiro.converter.repositories.HbvBloodTestRepository;
 import edu.hiro.converter.repositories.HcvBloodTestRepository;
 import edu.hiro.converter.repositories.PegribaBloodTestRepository;
 import edu.hiro.converter.repositories.PegribaPatientRepository;
+import edu.hiro.util.SpringBatchHelper;
 
 @Service("converterService")
 @Transactional
 public class ConverterServiceImpl implements ConverterService
 {
+	
+	@Autowired
+	AccessPatientRepository accessPatientRepository;
+	
+	@Autowired
+	FmFirstExamRepository fmFirstExamRepository;
+	
+	@Autowired
+	FmHbvPatientRepository fmHbvPatientRepository;
+	
+	@Autowired
+	FmHcvPatientRepository fmHcvPatientRepository;
+	
 	@Autowired
 	HcvBloodTestRepository hcvBloodTestRepository;
 	
@@ -28,6 +49,35 @@ public class ConverterServiceImpl implements ConverterService
 	@Autowired
 	PegribaBloodTestRepository pegribaBloodTestRepository;
 
+
+	// filemaker files
+	
+	public void loadAccessPatients(String filename)
+	{
+		accessPatientRepository.deleteAll();
+		runJob("loadAccessPatients","filename",filename);		
+	}
+	
+	public void loadFmFirstExamPatients(String filename)
+	{
+		fmFirstExamRepository.deleteAll();
+		runJob("loadFmFirstExamPatients","filename",filename);		
+	}
+	
+	public void loadFmHbvPatients(String filename)
+	{
+		fmHbvPatientRepository.deleteAll();
+		runJob("loadFmHbvPatients","filename",filename);		
+	}
+	
+	public void loadFmHcvPatients(String filename)
+	{
+		fmHcvPatientRepository.deleteAll();
+		runJob("loadFmHcvPatients","filename",filename);		
+	}
+	
+	// blood test spreadsheets
+	
 	public void loadHcvBloodTests(String folder)
 	{
 		HcvBloodTestLoader loader=new HcvBloodTestLoader(hcvBloodTestRepository);
@@ -40,11 +90,25 @@ public class ConverterServiceImpl implements ConverterService
 		loader.loadFolder(folder);
 	}
 	
+	// ifn spreadsheets
+	
 	public void loadPegribaSpreadsheets(String folder)
 	{
 		System.out.println("importing data from directory "+folder);
 		PegribaSpreadsheetReader reader=new PegribaSpreadsheetReader(pegribaPatientRepository,
 				pegribaBloodTestRepository);
 		reader.loadFolder(folder);
+	}
+	
+	///////////////////////////////////////////////////////
+	
+	private JobExecution runJob(String id, Object...args)
+	{
+		String filename1="/META-INF/spring/applicationContext.xml";
+		String filename2="/META-INF/spring/batch-setup.xml";
+		ApplicationContext context = new ClassPathXmlApplicationContext(filename1,filename2);
+		JobExecution jobExecution=SpringBatchHelper.runJob(context, id, args);
+		System.out.println("Job ended with status: "+jobExecution.getExitStatus());
+		return jobExecution;
 	}
 }

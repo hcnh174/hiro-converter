@@ -1,6 +1,6 @@
 -- Table: fmfirstexam
 
-DROP TABLE fmfirstexam;
+DROP TABLE IF EXISTS fmfirstexam;
 
 CREATE TABLE fmfirstexam
 (

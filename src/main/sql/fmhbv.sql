@@ -1,6 +1,6 @@
 -- Table: fmhbv
 
-DROP TABLE fmhbv;
+DROP TABLE IF EXISTS fmhbv;
 
 CREATE TABLE fmhbv
 (

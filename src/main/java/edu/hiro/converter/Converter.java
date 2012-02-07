@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
+import edu.hiro.converter.filemaker.PegribaPatient;
+import edu.hiro.util.BeanHelper;
 import edu.hiro.util.CException;
 import edu.hiro.util.DatabaseHelper;
 import edu.hiro.util.ExceptionHelper;
@@ -14,22 +16,8 @@ import edu.hiro.util.StringHelper;
 
 public class Converter
 {	
-//	public static void main(String[] argv)
-//	{
-//		//StringHelper.println("ｱﾚﾙｷﾞｰ="+StringHelper.normalize("ｱﾚﾙｷﾞｰ"),Charsets.UTF_16);		
-//		//String dir="h:/patientdb.etc";
-//		String dir="d:/projects/patientdb.etc";
-//		//ExcelHelper helper=new ExcelHelper();
-//		String filename="d:/projects/patientdb.etc/dataroom/血液データ(Excel)/C型/1601-1700.xlsx";
-//		BloodTestLoader loader=new BloodTestLoader();
-//		loader.loadFile(filename);
-//		
-//		//BatchImportService batchService=new BatchImportServiceImpl();
-//		//batchService.loadPatients(dir);
-//	}
-	
 	public static void main(String[] argv)
-	{		
+	{	
 		Args args=new Args(argv);
 		if (args.actions.size()==0 || args.actions.get(0)==Action.help)
 		{
@@ -40,10 +28,22 @@ public class Converter
 		Params params=args.loadParams();
 		System.out.println("params: "+params.toString());
 		
+		DatabaseHelper.createSetupFile("src/main/sql");
+	
+		//if (true) return;
+		
 		Converter converter=new Converter(params);
 		try
 		{
-			converter.execute(args.actions);
+			//converter.execute(args.actions);
+			
+//			converter.loadHbvBloodTests();
+//			converter.loadHcvBloodTests();
+			converter.loadPegribaSpreadsheets();		
+//			converter.loadAccessPatients();
+//			converter.loadFmFirstExamPatients();
+//			converter.loadFmHbvPatients();
+//			converter.loadFmHcvPatients();
 		}
 		catch(Exception e)
 		{
@@ -79,8 +79,6 @@ public class Converter
 			return load();
 		case correct:
 			return correct();
-		//case merge:
-		//	return merge();
 		case help:
 			return doNothing();
 		default:
@@ -91,19 +89,65 @@ public class Converter
 	
 	public boolean load()
 	{
-		List<String> filenames=StringHelper.wrap(StringHelper.split(params.files,","),params.inDir,"");
-		ConverterService converterService=getConverterService();
-		//converterService.importFiles(filenames, new ImportParams(writer));
-		//String filename="d:/projects/patientdb.etc/dataroom/血液データ(Excel)/C型/1601-1700.xlsx";
-		String folder="d:/projects/patientdb.etc/dataroom/血液データ(Excel)/C型";
-		//converterService.loadHcvBloodTests(folder);
-		folder="d:/projects/patientdb.etc/dataroom/血液データ(Excel)/B型";
-		//converterService.loadHbvBloodTests(folder);
-		folder="h:/patientdb.etc/dataroom/IFNシート/IFN";
-		//folder="h:/patientdb.etc/dataroom/IFNシート/IFN/DB.701-800。";
-		converterService.loadPegribaSpreadsheets(folder);
+		loadHbvBloodTests();
+		loadHcvBloodTests();
+		loadPegribaSpreadsheets();		
+		loadAccessPatients();
+		loadFmFirstExamPatients();
+		loadFmHbvPatients();
+		loadFmHcvPatients();
 		return true;
 	}
+	
+	public boolean loadHbvBloodTests()
+	{
+		ConverterService converterService=getConverterService();
+		converterService.loadHbvBloodTests(params.hbvbloodtestsDir);
+		return true;
+	}
+	
+	public boolean loadHcvBloodTests()
+	{
+		ConverterService converterService=getConverterService();
+		converterService.loadHcvBloodTests(params.hcvbloodtestsDir);
+		return true;
+	}
+	
+	public boolean loadPegribaSpreadsheets()
+	{
+		ConverterService converterService=getConverterService();
+		converterService.loadPegribaSpreadsheets(params.ifnDir);
+		return true;
+	}
+	
+	public boolean loadAccessPatients()
+	{
+		ConverterService converterService=getConverterService();
+		converterService.loadAccessPatients(params.accessFile);
+		return true;
+	}
+	
+	public boolean loadFmFirstExamPatients()
+	{
+		ConverterService converterService=getConverterService();
+		converterService.loadFmFirstExamPatients(params.fmfirstexamFile);
+		return true;
+	}
+	
+	public boolean loadFmHbvPatients()
+	{
+		ConverterService converterService=getConverterService();
+		converterService.loadFmHbvPatients(params.fmhbvFile);
+		return true;
+	}
+	
+	public boolean loadFmHcvPatients()
+	{
+		ConverterService converterService=getConverterService();
+		converterService.loadFmHcvPatients(params.fmhcvFile);
+		return true;
+	}
+	
 	
 	public boolean correct()
 	{
@@ -126,16 +170,10 @@ public class Converter
 	
 	private void loadApplicationContext()
 	{
-		if (!DatabaseHelper.databaseExists(params.converter))
-			throw new CException("can't create application context because database not created yet: "+params.converter.getName());
-			
-		applicationContext = new GenericXmlApplicationContext();
-		//SpringHelper.registerDataSource(applicationContext,"converterDataSource",params.converter);
-		applicationContext.load("META-INF/spring/applicationContext.xml");
-		//SpringHelper.registerDataSource(applicationContext,"dataSource",params.hdb);
-		//registerDataSource(applicationContext,"converterDataSource",params.db,"converter");
-		//SpringHelper.loadXmlBeanDefinitions(applicationContext,"classpath:META-INF/spring/applicationContext.xml");
-		applicationContext.refresh();
+		//if (!DatabaseHelper.databaseExists(params.converter))
+		//	throw new CException("can't create application context because database not created yet: "+params.converter.getName());
+		applicationContext = new GenericXmlApplicationContext("META-INF/spring/applicationContext.xml");
+		//applicationContext.refresh();
 	}
 	
 	private ConverterService getConverterService()

@@ -1,6 +1,6 @@
 -- Table: access
 
-DROP TABLE access;
+DROP TABLE IF EXISTS access;
 
 CREATE TABLE access
 (

@@ -23,7 +23,7 @@ public class PegribaBloodTest extends AbstractEntity
 	@Column(columnDefinition="SERIAL NOT NULL")
 	protected Integer rowID=null;
 	
-	@Column(name="pegribadbno") public Integer pegribaDBno;
+	@Column(name="pegribadbno") public String pegribaDBno;
 	public String type;
 	public String 予定日=null;
 	public String 日付=null;
@@ -43,7 +43,7 @@ public class PegribaBloodTest extends AbstractEntity
 
 	public PegribaBloodTest(){}
 	
-	public PegribaBloodTest(Integer pegribaDBno, Type type)
+	public PegribaBloodTest(String pegribaDBno, Type type)
 	{
 		this.pegribaDBno=pegribaDBno;
 		this.type=type.name();

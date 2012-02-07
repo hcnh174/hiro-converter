@@ -1,6 +1,6 @@
 -- Table: hbvbloodtests
 
-DROP TABLE hbvbloodtests;
+DROP TABLE IF EXISTS hbvbloodtests;
 
 CREATE TABLE hbvbloodtests
 (

@@ -29,6 +29,7 @@
 	<!-- readers -->
 
 	<bean id="parentReader" abstract="true" class="org.springframework.batch.item.file.FlatFileItemReader">
+		<property name="resource" value="file:#{jobParameters[filename]}" />
 		<property name="linesToSkip" value="1" />
 		<property name="encoding" value="UTF-16" />
 		<property name="skippedLinesCallback">
@@ -40,7 +41,6 @@
 	</bean>
 
 	<bean id="fmHcvPatientReader" parent="parentReader" scope="step">
-		<property name="resource" value="file:#{jobParameters[dir]}/fmhcv.txt" />
 		<property name="lineMapper">			
 			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
 				<property name="lineTokenizer" ref="lineTokenizer"/>
@@ -52,7 +52,6 @@
 	</bean>
 	
 	<bean id="fmHbvPatientReader" parent="parentReader" scope="step">
-		<property name="resource" value="file:#{jobParameters[dir]}/fmhbv.txt" />
 		<property name="skippedLinesCallback">
 			<bean class="edu.hiro.converter.batch.HeaderCallbackHandler">
 				<property name="lineTokenizer" ref="lineTokenizer"/>
@@ -82,7 +81,6 @@
 	</bean>
 	
 	<bean id="fmFirstExamReader" parent="parentReader" scope="step">
-		<property name="resource" value="file:#{jobParameters[dir]}/fmfirstexam.txt" />
 		<property name="lineMapper">			
 			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
 				<property name="lineTokenizer" ref="lineTokenizer"/>
@@ -94,25 +92,10 @@
 	</bean>
 
 	<bean id="accessPatientReader" parent="parentReader" scope="step">
-		<property name="resource" value="file:#{jobParameters[dir]}/access.txt" />
 		<property name="skippedLinesCallback">
 			<bean class="edu.hiro.converter.batch.HeaderCallbackHandler">
 				<property name="lineTokenizer" ref="lineTokenizer"/>
 				<property name="delimiter" value="&#9;" />
-				<!-- 
-				<property name="conversions">
-					<map>
-						<entry key="1変更後の診断" value="変更後の診断1"/>
-						<entry key="1診断変更日" value="診断変更日1"/>
-						<entry key="2変更後の診断" value="変更後の診断2"/>
-						<entry key="2診断変更日" value="診断変更日2"/>						
-						<entry key="1変更後の診断" value="変更後の診断1"/>
-						<entry key="1診断変更日" value="診断変更日1"/>
-						<entry key="2変更後の診断" value="変更後の診断2"/>
-						<entry key="2診断変更日	" value="診断変更日2"/>
-					</map>
-				</property>
-				 -->
 			</bean>
 		</property>
 		<property name="lineMapper">
@@ -144,6 +127,47 @@
 		</tasklet>
 	</step>
 
+	<job id="loadAccessPatients" xmlns="http://www.springframework.org/schema/batch">
+		<step id="loadAccessPatientsStep" parent="parentStep">
+			<tasklet>
+				<chunk reader="accessPatientReader">
+					<skippable-exception-classes merge="true"/>
+				</chunk>
+			</tasklet>
+		</step>
+	</job>
+	
+	<job id="loadFmFirstExamPatients" xmlns="http://www.springframework.org/schema/batch">
+		<step id="loadFmFirstExamPatientsStep" parent="parentStep">
+			<tasklet>
+				<chunk reader="fmFirstExamReader">
+					<skippable-exception-classes merge="true"/>
+				</chunk>
+			</tasklet>
+		</step>
+	</job>
+	
+	<job id="loadFmHbvPatients" xmlns="http://www.springframework.org/schema/batch">
+		<step id="loadFmHbvPatientsStep" parent="parentStep">
+			<tasklet>
+				<chunk reader="fmHbvPatientReader">
+					<skippable-exception-classes merge="true"/>
+				</chunk>
+			</tasklet>
+		</step>
+	</job>
+	
+	<job id="loadFmHcvPatients" xmlns="http://www.springframework.org/schema/batch">
+		<step id="loadFmHcvPatientsStep" parent="parentStep">
+			<tasklet>
+				<chunk reader="fmHcvPatientReader">
+					<skippable-exception-classes merge="true"/>
+				</chunk>
+			</tasklet>
+		</step>
+	</job>
+
+	<!-- 
 	<job id="loadPatients" xmlns="http://www.springframework.org/schema/batch">
 		<step id="loadAccessPatients" parent="parentStep" next="loadFmFirstExamPatients">
 			<tasklet>
@@ -174,4 +198,5 @@
 			</tasklet>
 		</step>
 	</job>
+	 -->
 </beans>

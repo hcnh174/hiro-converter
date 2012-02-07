@@ -6,13 +6,14 @@ import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import edu.hiro.converter.ImportHelper;
 import edu.hiro.util.AbstractEntity;
+import edu.hiro.util.BeanHelper;
 import edu.hiro.util.DateHelper;
 import edu.hiro.util.ExcelHelper;
 import edu.hiro.util.FileHelper;
@@ -28,7 +29,7 @@ public abstract class AbstractBloodTestLoader
 	
 	protected ExcelHelper helper=new ExcelHelper();	
 	protected final Map<String,String> conversions=Maps.newHashMap();
-	protected final ImportHelper importhelper=new ImportHelper();
+	protected final BeanHelper beanhelper=new BeanHelper();
 	
 	public AbstractBloodTestLoader(int first_col, int last_col, int header_row)
 	{
@@ -39,6 +40,7 @@ public abstract class AbstractBloodTestLoader
 	
 	public void loadFolder(String folder)
 	{
+		deleteAll();
 		for (String filename : FileHelper.listFiles(folder,".xlsx",true))
 		{
 			if (!ImportHelper.filenameMatches(filename,this.filepattern))
@@ -84,6 +86,8 @@ public abstract class AbstractBloodTestLoader
 		}
 	}
 	
+	protected abstract void deleteAll();
+	
 	protected abstract AbstractEntity createEntity();
 	
 	protected abstract void save(AbstractEntity bloodtest);
@@ -93,7 +97,7 @@ public abstract class AbstractBloodTestLoader
 		List<String> values=getValues(sheet,rownum);
 		//StringHelper.println("values"+StringHelper.join(values), Charsets.UTF_16);
 		AbstractEntity bloodtest=createEntity();
-		importhelper.setProperty(bloodtest,"idnum",idnum);
+		beanhelper.setField(bloodtest,"idnum",idnum);
 		for (int index=0;index<fields.size();index++)
 		{
 			String field=fields.get(index);
@@ -105,7 +109,7 @@ public abstract class AbstractBloodTestLoader
 				value=fixDate(value);
 			}
 			//StringHelper.println("set "+field+"="+value);
-			importhelper.setProperty(bloodtest,field,value);
+			beanhelper.setField(bloodtest,field,value);
 		}
 		save(bloodtest);
 		//System.out.println("bloodtest="+bloodtest.toString());

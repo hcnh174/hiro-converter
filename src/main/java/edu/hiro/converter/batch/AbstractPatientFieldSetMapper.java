@@ -4,12 +4,11 @@ import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.validation.BindException;
 
-import edu.hiro.converter.ImportHelper;
+import edu.hiro.util.BeanHelper;
 
 public abstract class AbstractPatientFieldSetMapper<T> implements FieldSetMapper<T>
 {
-	//private Map<String,Field> map=Maps.newHashMap();
-	private ImportHelper helper=new ImportHelper();
+	private BeanHelper beanhelper=new BeanHelper();
 	
 	protected abstract T createEntity();
 	
@@ -22,36 +21,8 @@ public abstract class AbstractPatientFieldSetMapper<T> implements FieldSetMapper
 		{
 			String name=names[index];
 			String value=values[index];
-			helper.setProperty(patient,name,value);
+			beanhelper.setField(patient,name,value);
 		}
 		return patient;
 	}
-	
-	/*
-	private Field getField(T patient, String name) throws SecurityException, NoSuchFieldException
-	{
-		if (map.containsKey(name))
-			return map.get(name);
-		Field field = patient.getClass().getDeclaredField(name);
-		field.setAccessible(true);
-		map.put(name,field);
-		return field;
-	}
-
-	private void setProperty(T patient, String name, String value)
-	{
-		try
-		{
-			value=StringHelper.normalize(value);
-			if (!StringHelper.hasContent(value))
-				return;
-			Field field = getField(patient,name);
-			field.set(patient,value);
-		}
-		catch (Exception e)
-		{
-			StringHelper.println("Can't find property: "+name+": "+e,Charsets.UTF_16);
-		}
-	}
-	*/
 }

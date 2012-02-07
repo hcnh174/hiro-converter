@@ -9,7 +9,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.PreUpdate;
 
 @MappedSuperclass
-public abstract class AbstractEntity// implements IEntity
+public abstract class AbstractEntity
 {
 	public String toString()
 	{

@@ -52,7 +52,7 @@ public class ImportHelper
 	public static boolean sheetMatches(Sheet sheet, String sheetpattern)
 	{
 		String name=sheet.getSheetName();
-		if (name.equals("Sheet1") || name.equals("Sheet2") || name.equals("Sheet3"))
+		if (name.matches("Sheet[1-3]")) // probably an empty workbook
 			return false;
 		boolean matches=name.matches(sheetpattern);
 		if (!matches)
@@ -61,37 +61,7 @@ public class ImportHelper
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////
-	
-	private Map<String,Field> map=Maps.newHashMap();
 
-	public void setProperty(Object obj, String name, String value)
-	{
-		try
-		{
-			if (!StringHelper.hasContent(name))
-				return;
-			value=StringHelper.normalize(value);
-			if (!StringHelper.hasContent(value))
-				return;
-			Field field = getField(obj,name);
-			field.set(obj,value);
-		}
-		catch (Exception e)
-		{
-			StringHelper.println("Can't find property: "+name+": "+e,Charsets.UTF_16);
-		}
-	}
-	
-	private Field getField(Object obj, String name) throws SecurityException, NoSuchFieldException
-	{
-		if (map.containsKey(name))
-			return map.get(name);
-		Field field = obj.getClass().getDeclaredField(name);
-		field.setAccessible(true);
-		map.put(name,field);
-		return field;
-	}
-	
 	public enum Sex
 	{
 		男,

@@ -23,6 +23,11 @@ public class HcvBloodTestLoader extends AbstractBloodTestLoader
 		conversions.put("hcvジェノタイプ","hcvgeno");
 	}
 
+	protected void deleteAll()
+	{
+		repository.deleteAll();
+	}
+	
 	protected AbstractEntity createEntity()
 	{
 		return new HcvBloodTest();

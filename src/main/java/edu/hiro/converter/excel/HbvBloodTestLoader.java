@@ -17,6 +17,11 @@ public class HbvBloodTestLoader extends AbstractBloodTestLoader
 		conversions.put("icg(r15)","icg");
 	}
 	
+	protected void deleteAll()
+	{
+		repository.deleteAll();
+	}
+	
 	protected AbstractEntity createEntity()
 	{
 		return new HbvBloodTest();

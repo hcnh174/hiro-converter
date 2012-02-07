@@ -1,12 +1,12 @@
 -- Table: pegribabloodtests
 
-DROP TABLE pegribabloodtests;
+DROP TABLE IF EXISTS pegribabloodtests;
 
 CREATE TABLE pegribabloodtests
 (
 	rowid serial NOT NULL,
 
-	pegribadbno INTEGER,
+	pegribadbno TEXT,
 	type TEXT,	
 	予定日 TEXT,
 	日付 TEXT,
