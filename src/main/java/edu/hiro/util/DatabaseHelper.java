@@ -47,10 +47,10 @@ public final class DatabaseHelper
 		return buffer.toString();
 	}
 	
-	public static void createSetupFile(String folder)
+	public static void createSetupFile(String folder, boolean overwrite)
 	{
 		String setupfile=folder+"/setup.sql";
-		if (FileHelper.exists(setupfile))
+		if (FileHelper.exists(setupfile) && !overwrite)
 			return;
 		System.out.println("creating database setup file: "+setupfile);
 		String str=concatenateScripts(folder);		

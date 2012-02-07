@@ -1,5 +1,8 @@
 package edu.hiro.converter;
 
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.springframework.context.support.GenericApplicationContext;
@@ -7,6 +10,7 @@ import org.springframework.context.support.GenericXmlApplicationContext;
 
 import com.google.common.base.Charsets;
 
+import edu.hiro.util.CException;
 import edu.hiro.util.DatabaseHelper;
 import edu.hiro.util.ExceptionHelper;
 import edu.hiro.util.FileHelper;
@@ -15,37 +19,16 @@ import edu.hiro.util.StringHelper;
 
 public class Converter
 {	
+	//chcp 65001
 	public static void main(String[] argv)
-	{	
+	{		
 		Args args=new Args(argv);
-		if (args.actions.size()==0 || args.actions.get(0)==Action.help)
-		{
-			System.out.println(Args.getHelp());
-			return;
-		}
-		
 		Params params=args.loadParams();
-		System.out.println("params: "+params.toString());
-		
-		DatabaseHelper.createSetupFile("src/main/sql");
-
-		//if (true) return;
-		
 		Converter converter=new Converter(params);
-		
+		//if (true) return;		
 		try
 		{
-			converter.loadIfnSpreadsheets();
-			//converter.loadHcvBloodTests();
-			//converter.execute(args.actions);
-			//converter.getConverterService().test();
-			//try {converter.loadHbvBloodTests();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
-			//try {converter.loadHcvBloodTests();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
-			//try {converter.loadIfnSpreadsheets();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}		
-			//try {converter.loadAccessPatients();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
-			//try {converter.loadFmFirstExamPatients();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
-			//try {converter.loadFmHbvPatients();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
-			//try {converter.loadFmHcvPatients();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
+			converter.execute(args.actions);
 		}
 		catch(Exception e)
 		{
@@ -54,6 +37,8 @@ public class Converter
 			FileHelper.writeFile("c:/temp/converter-exception.txt",ExceptionHelper.getMessage(e));
 		}
 	}
+
+
 
 	private Params params;
 	private MessageWriter writer=new MessageWriter();
@@ -78,9 +63,25 @@ public class Converter
 		switch(action)
 		{
 		case load:
-			return load();
+			return load();			
+		case hbvbloodtests:
+			return loadHbvBloodTests();
+		case hcvbloodtests:
+			return loadHcvBloodTests();
+		case ifn:
+			return loadIfnSpreadsheets();
+		case access:
+			return loadAccessPatients();
+		case fmfirstexam:
+			return loadFmFirstExamPatients();
+		case fmhbv:
+			return loadFmHbvPatients();
+		case fmhcv:
+			return loadFmHcvPatients();			
 		case correct:
 			return correct();
+		case setupfile:
+			return makeSetupFile();
 		case help:
 			return doNothing();
 		default:
@@ -157,6 +158,11 @@ public class Converter
 		return true;
 	}
 
+	public boolean makeSetupFile()
+	{
+		DatabaseHelper.createSetupFile("src/main/sql",true);
+		return true;
+	}
 	
 	public boolean doNothing()
 	{
@@ -183,3 +189,9 @@ public class Converter
 		return (ConverterService)getApplicationContext().getBean("converterService");
 	}
 }
+//
+//public static void println(String str)
+//{
+//	//System.setOut(new PrintStream(System.out,true,"UTF-8"));
+//	System.out.println(new String(str.getBytes(Charsets.UTF_8)));
+//}

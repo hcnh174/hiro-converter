@@ -2,16 +2,16 @@ package edu.hiro.converter;
 
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+//@Transactional
 public interface ConverterService
 {
-	void loadAccessPatients(String dir);
-	void loadFmFirstExamPatients(String dir);
-	void loadFmHbvPatients(String dir);
-	void loadFmHcvPatients(String dir);	
+	void loadAccessPatients(String filename);
+	void loadFmFirstExamPatients(String filename);
+	void loadFmHbvPatients(String filename);
+	void loadFmHcvPatients(String filename);	
 	void loadHcvBloodTests(String folder);
 	void loadHbvBloodTests(String folder);
 	void loadIfnSpreadsheets(String folder);
 	
-	void test();
+	//void test();
 }

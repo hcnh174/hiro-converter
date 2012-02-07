@@ -11,6 +11,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.springframework.context.support.GenericApplicationContext;
 
+import com.google.common.collect.Lists;
+
 import edu.hiro.util.CException;
 import edu.hiro.util.FileHelper;
 import edu.hiro.util.SpringHelper;
@@ -22,7 +24,7 @@ public class Args
 	public static final String CONVERTER_PROPERTIES_PATH="classpath:default.converter.properties";
 	
 	protected String filename;
-	protected List<Action> actions=new ArrayList<Action>();
+	protected List<Action> actions=Lists.newArrayList();
 	
 	private static final String FILENAME="filename";
 	private static final String ACTION="action";
@@ -81,21 +83,20 @@ public class Args
 	}
 	
 	public Params loadParams()
-	{
-		if (filename==null)
-			throw new CException("converter properties filename has not been set");
-		
+	{		
 		GenericApplicationContext context = new GenericApplicationContext();
-		SpringHelper.registerPropertyPlaceholderConfigurer(context,
-				CONVERTER_PROPERTIES_PATH,FileHelper.getFilenameAsUrl(filename));
 		
-		Map<String,Object> map=Params.getPropertyMap();
-		SpringHelper.registerBean(context,"params",Params.class,map);
+		if (filename==null)
+			SpringHelper.registerPropertyPlaceholderConfigurer(context,CONVERTER_PROPERTIES_PATH);
+		else SpringHelper.registerPropertyPlaceholderConfigurer(context,
+				CONVERTER_PROPERTIES_PATH, FileHelper.getFilenameAsUrl(filename));
+		
+		SpringHelper.registerBean(context,"params",Params.class,Params.getPropertyMap());
 		context.refresh();
 		
 		Params params=(Params)context.getBean("params");
 		params.validate();
-		System.out.println("setup params="+params.toString());
+		StringHelper.println("setup params="+params.toString());
 		return params;
 	}
 }

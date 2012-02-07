@@ -112,9 +112,9 @@ public class ConverterServiceImpl implements ConverterService
 		return jobExecution;
 	}
 	
-	public void test()
-	{
-		HbvBloodTestLoader loader=new HbvBloodTestLoader(hbvBloodTestRepository);
-		loader.loadFile("D:/projects/patientdb.etc/dataroom/血液データ(Excel)/B型/18001-18100.xlsx");
-	}
+//	public void test()
+//	{
+//		HbvBloodTestLoader loader=new HbvBloodTestLoader(hbvBloodTestRepository);
+//		loader.loadFile("D:/projects/patientdb.etc/dataroom/血液データ(Excel)/B型/18001-18100.xlsx");
+//	}
 }

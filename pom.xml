@@ -22,6 +22,7 @@
 		<poi.version>3.8-beta5</poi.version>
 		<spring.data.jpa.version>1.0.2.RELEASE</spring.data.jpa.version>
 		<hibernate.version>3.6.8.Final</hibernate.version>
+		<action>help</action>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -304,9 +305,11 @@
 									<mainClass>edu.hiro.converter.Converter</mainClass>
 									<arguments>
 										<argument>-action</argument>
-										<argument>load</argument> 
+										<argument>${action}</argument>
+										<!-- 
 										<argument>-filename</argument>
-										<argument>d:/projects/hdb.etc/converter.properties</argument> 
+										<argument>d:/projects/hdb.etc/converter.properties</argument>
+										 -->
 									</arguments>
 								</configuration>  
 							</execution>  
