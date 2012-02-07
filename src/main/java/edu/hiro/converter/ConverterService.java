@@ -11,7 +11,7 @@ public interface ConverterService
 	void loadFmHcvPatients(String dir);	
 	void loadHcvBloodTests(String folder);
 	void loadHbvBloodTests(String folder);
-	void loadPegribaSpreadsheets(String folder);
+	void loadIfnSpreadsheets(String folder);
 	
 	void test();
 }

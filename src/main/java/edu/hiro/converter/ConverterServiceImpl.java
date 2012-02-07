@@ -92,7 +92,7 @@ public class ConverterServiceImpl implements ConverterService
 	
 	// ifn spreadsheets
 	
-	public void loadPegribaSpreadsheets(String folder)
+	public void loadIfnSpreadsheets(String folder)
 	{
 		System.out.println("importing data from directory "+folder);
 		IfnSpreadsheetReader reader=new IfnSpreadsheetReader(ifnTreatmentRepository,

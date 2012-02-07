@@ -35,12 +35,13 @@ public class Converter
 		
 		try
 		{
-			converter.loadHcvBloodTests();
+			converter.loadIfnSpreadsheets();
+			//converter.loadHcvBloodTests();
 			//converter.execute(args.actions);
 			//converter.getConverterService().test();
 			//try {converter.loadHbvBloodTests();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
 			//try {converter.loadHcvBloodTests();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
-			//try {converter.loadPegribaSpreadsheets();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}		
+			//try {converter.loadIfnSpreadsheets();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}		
 			//try {converter.loadAccessPatients();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
 			//try {converter.loadFmFirstExamPatients();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
 			//try {converter.loadFmHbvPatients();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
@@ -92,7 +93,7 @@ public class Converter
 	{
 		loadHbvBloodTests();
 		loadHcvBloodTests();
-		loadPegribaSpreadsheets();		
+		loadIfnSpreadsheets();		
 		loadAccessPatients();
 		loadFmFirstExamPatients();
 		loadFmHbvPatients();
@@ -114,10 +115,10 @@ public class Converter
 		return true;
 	}
 	
-	public boolean loadPegribaSpreadsheets()
+	public boolean loadIfnSpreadsheets()
 	{
 		ConverterService converterService=getConverterService();
-		converterService.loadPegribaSpreadsheets(params.ifnDir);
+		converterService.loadIfnSpreadsheets(params.ifnDir);
 		return true;
 	}
 	

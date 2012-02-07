@@ -18,7 +18,7 @@ public class IfnTreatment extends AbstractEntity
 	@Column(columnDefinition="SERIAL NOT NULL")
 	protected Integer rowID=null;
 	
-	@Column(name="ifndnbo") public String ifnDBno;
+	@Column(name="ifndbno") public String ifnDBno;
 	public String dbno;//DBno
 	public String シート名;
 	public String ダブル登録;

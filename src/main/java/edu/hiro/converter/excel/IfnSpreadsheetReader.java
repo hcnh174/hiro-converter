@@ -1,5 +1,8 @@
 package edu.hiro.converter.excel;
 
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +10,7 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 
 import edu.hiro.converter.ImportHelper;
@@ -15,11 +19,11 @@ import edu.hiro.converter.domain.IfnTreatment;
 import edu.hiro.converter.repositories.IfnBloodTestRepository;
 import edu.hiro.converter.repositories.IfnTreatmentRepository;
 import edu.hiro.util.BeanHelper;
+import edu.hiro.util.CException;
 import edu.hiro.util.DateHelper;
 import edu.hiro.util.ExcelHelper;
 import edu.hiro.util.FileHelper;
 import edu.hiro.util.MathHelper;
-import edu.hiro.util.MessageWriter;
 import edu.hiro.util.StringHelper;
 
 public class IfnSpreadsheetReader
@@ -27,7 +31,7 @@ public class IfnSpreadsheetReader
 	protected static final String filepattern=".*[0-9]+-[0-9]+\\.xlsx";
 	protected static final String sheetpattern="[0-9]+(-[0-9]+)?";
 	
-	private MessageWriter writer=new MessageWriter();
+	//private MessageWriter writer=new MessageWriter();
 	private ExcelHelper excelhelper=new ExcelHelper();
 	private BeanHelper beanhelper=new BeanHelper();
 	
@@ -45,10 +49,10 @@ public class IfnSpreadsheetReader
 	
 	public void loadFolder(String dir)
 	{
-		ifnTreatmentRepository.deleteAll();
 		ifnBloodTestRepository.deleteAll();
+		ifnTreatmentRepository.deleteAll();		
 		dir=FileHelper.normalizeDirectory(dir);
-		writer.message("loading folder="+dir);
+		StringHelper.println("loading folder="+dir);
 		List<String> filenames=FileHelper.listFilesRecursively(dir, ".xlsx");
 		for (String filename : filenames)
 		{
@@ -67,7 +71,7 @@ public class IfnSpreadsheetReader
 
 	public void loadSpreadsheet(String filename)
 	{
-		writer.message("loading spreadsheet="+filename);
+		StringHelper.println("loading spreadsheet="+filename);
 		Workbook workbook=excelhelper.openSpreadsheet(filename);
 		for (int sheetnum=0;sheetnum<workbook.getNumberOfSheets();sheetnum++)
 		{
@@ -83,7 +87,7 @@ public class IfnSpreadsheetReader
 				System.err.println("problem with sheet "+sheet.getSheetName()+", skipping");
 			}
 		}
-		writer.br();
+		StringHelper.println("");
 	}
 	
 	private IfnTreatment createIfnTreatment(Sheet sheet)
@@ -94,7 +98,7 @@ public class IfnSpreadsheetReader
 	
 	private void loadSheet(Sheet sheet)
 	{
-		writer.write(sheet.getSheetName()+" ");
+		StringHelper.print(sheet.getSheetName()+" ");
 		IfnTreatment patient=createIfnTreatment(sheet);
 	
 		setField(sheet,patient,"DBno",39,22,1,2);//DBno
@@ -297,6 +301,42 @@ public class IfnSpreadsheetReader
 			bloodtests.put(type,new IfnBloodTest(patient.ifnDBno,type));
 		return bloodtests.get(type);
 	}
+	
+	////////////////////////////////////////////////////////
+	
+//	private static Charset use_encoding=Charsets.ISO_8859_1;
+//	
+//	public static void print(String str)
+//	{
+//		print(str,use_encoding);
+//	}
+//	
+//	public static void print(String str, Charset charset)
+//	{
+//		getPrintStream(charset).print(str);
+//	}
+//	
+//	public static void println(String str)
+//	{
+//		println(str,use_encoding);
+//	}
+//	
+//	public static void println(String str, Charset charset)
+//	{
+//		getPrintStream(charset).println(str);
+//	}
+//	
+//	private static PrintStream getPrintStream(Charset charset)
+//	{
+//		try
+//		{
+//			return new PrintStream(System.out, true, charset.toString());
+//		}
+//		catch (UnsupportedEncodingException e)
+//		{
+//			throw new CException(e);
+//		}
+//	}
 }
 
 /*
