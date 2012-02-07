@@ -10,8 +10,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import com.google.common.collect.Maps;
 
 import edu.hiro.converter.ImportHelper;
-import edu.hiro.converter.filemaker.IfnBloodTest;
-import edu.hiro.converter.filemaker.IfnTreatment;
+import edu.hiro.converter.domain.IfnBloodTest;
+import edu.hiro.converter.domain.IfnTreatment;
 import edu.hiro.converter.repositories.IfnBloodTestRepository;
 import edu.hiro.converter.repositories.IfnTreatmentRepository;
 import edu.hiro.util.BeanHelper;

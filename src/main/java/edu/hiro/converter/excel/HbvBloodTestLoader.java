@@ -1,6 +1,6 @@
 package edu.hiro.converter.excel;
 
-import edu.hiro.converter.filemaker.HbvBloodTest;
+import edu.hiro.converter.domain.HbvBloodTest;
 import edu.hiro.converter.repositories.HbvBloodTestRepository;
 import edu.hiro.util.AbstractEntity;
 

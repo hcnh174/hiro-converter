@@ -1,4 +1,4 @@
-package edu.hiro.converter.filemaker;
+package edu.hiro.converter.domain;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

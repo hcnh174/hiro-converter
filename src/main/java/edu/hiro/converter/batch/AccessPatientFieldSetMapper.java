@@ -1,6 +1,6 @@
 package edu.hiro.converter.batch;
 
-import edu.hiro.converter.filemaker.AccessPatient;
+import edu.hiro.converter.domain.AccessPatient;
 
 public class AccessPatientFieldSetMapper extends AbstractPatientFieldSetMapper<AccessPatient>
 {

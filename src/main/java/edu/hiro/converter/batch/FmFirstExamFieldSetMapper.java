@@ -1,6 +1,6 @@
 package edu.hiro.converter.batch;
 
-import edu.hiro.converter.filemaker.FmFirstExam;
+import edu.hiro.converter.domain.FmFirstExam;
 
 public class FmFirstExamFieldSetMapper extends AbstractPatientFieldSetMapper<FmFirstExam>
 {

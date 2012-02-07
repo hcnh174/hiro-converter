@@ -1,6 +1,6 @@
 package edu.hiro.converter.batch;
 
-import edu.hiro.converter.filemaker.FmHcvPatient;
+import edu.hiro.converter.domain.FmHcvPatient;
 
 public class FmHcvPatientFieldSetMapper extends AbstractPatientFieldSetMapper<FmHcvPatient>
 {
