@@ -21,7 +21,7 @@ import edu.hiro.converter.repositories.IfnTreatmentRepository;
 import edu.hiro.util.SpringBatchHelper;
 
 @Service("converterService")
-@Transactional
+//@Transactional
 public class ConverterServiceImpl implements ConverterService
 {
 	
@@ -110,5 +110,11 @@ public class ConverterServiceImpl implements ConverterService
 		JobExecution jobExecution=SpringBatchHelper.runJob(context, id, args);
 		System.out.println("Job ended with status: "+jobExecution.getExitStatus());
 		return jobExecution;
+	}
+	
+	public void test()
+	{
+		HbvBloodTestLoader loader=new HbvBloodTestLoader(hbvBloodTestRepository);
+		loader.loadFile("D:/projects/patientdb.etc/dataroom/血液データ(Excel)/B型/18001-18100.xlsx");
 	}
 }

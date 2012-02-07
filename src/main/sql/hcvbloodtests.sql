@@ -7,9 +7,15 @@ CREATE TABLE hcvbloodtests
 	rowid serial NOT NULL,
 
 	idnum TEXT,
+	sheetname TEXT,
+	num TEXT, -- some identifying number
+	患者名 TEXT,
+	status TEXT,
+	tx TEXT,
 	治療履歴 TEXT,
 	ifn履歴 TEXT,
 	日付 TEXT,
+
 	hcvamt TEXT,--hcv-AM-T TEXT,
 	hcvgeno TEXT,--hcv-GENO TEXT,
 	hcvtaq TEXT,--hcv(Taq TEXT,

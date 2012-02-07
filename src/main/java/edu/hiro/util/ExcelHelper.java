@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.formula.eval.NotImplementedException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellValue;
@@ -229,12 +230,15 @@ public class ExcelHelper
 					return null;
 			}
 		}
+		catch (NotImplementedException e)
+		{
+			writer.message("NotImplementedException: ["+"="+cell.getCellFormula().toString()+"]");
+			return null;
+		}
 		catch (Exception e)
 		{
-			//throw new CException(cell.getCellFormula().toString(),e);
 			writer.message(e.toString());
-			writer.message(cell.getCellFormula().toString());
-			//e.printStackTrace();
+			writer.message("="+cell.getCellFormula().toString());
 			return null;
 		}
 	}
@@ -299,6 +303,14 @@ public class ExcelHelper
 		Row row = sheet.getRow(cellReference.getRow());
 		Cell cell = row.getCell(cellReference.getCol());
 		return getCellValue(cell);
+	}
+	
+	public String getStringCellValue(Sheet sheet, String address)
+	{
+		Object value=getCellValue(sheet,address);
+		if (value==null)
+			return "";
+		return value.toString();
 	}
 	
 	/////////////////////////////////////////////////////////////

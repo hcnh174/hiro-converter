@@ -1,12 +1,8 @@
 package edu.hiro.converter;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Sheet;
-
-import com.google.common.base.Charsets;
-import com.google.common.collect.Maps;
 
 import edu.hiro.util.FileHelper;
 import edu.hiro.util.StringHelper;
@@ -51,9 +47,14 @@ public class ImportHelper
 	
 	public static boolean sheetMatches(Sheet sheet, String sheetpattern)
 	{
-		String name=sheet.getSheetName();
+		return sheetMatches(sheet.getSheetName(),sheetpattern);
+	}
+	
+	public static boolean sheetMatches(String name, String sheetpattern)
+	{
 		if (name.matches("Sheet[1-3]")) // probably an empty workbook
 			return false;
+		name=name.trim();//remove whitespace at end of name (e.g. "sheet 17550 ") 
 		boolean matches=name.matches(sheetpattern);
 		if (!matches)
 			System.out.println("sheet "+name+" does not match pattern "+sheetpattern+". skipping.");
@@ -78,3 +79,13 @@ public class ImportHelper
 		}
 	};	
 }
+
+
+/*
+String sheet; String sheetpattern="^[0-9]+|^sheet [0-9]+";//"[0-9]+";
+sheet="6202"; System.out.println(sheet+": "+ImportHelper.sheetMatches(sheet, sheetpattern));
+sheet="Sheet6202"; System.out.println(sheet+": "+ImportHelper.sheetMatches(sheet, sheetpattern));
+sheet="sheet6202"; System.out.println(sheet+": "+ImportHelper.sheetMatches(sheet, sheetpattern));
+sheet="Sheet 6202"; System.out.println(sheet+": "+ImportHelper.sheetMatches(sheet, sheetpattern));
+sheet="sheet 6202"; System.out.println(sheet+": "+ImportHelper.sheetMatches(sheet, sheetpattern));
+*/

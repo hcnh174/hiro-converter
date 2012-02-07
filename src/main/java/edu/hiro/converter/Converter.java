@@ -5,10 +5,13 @@ import java.util.List;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
+import com.google.common.base.Charsets;
+
 import edu.hiro.util.DatabaseHelper;
 import edu.hiro.util.ExceptionHelper;
 import edu.hiro.util.FileHelper;
 import edu.hiro.util.MessageWriter;
+import edu.hiro.util.StringHelper;
 
 public class Converter
 {	
@@ -25,25 +28,27 @@ public class Converter
 		System.out.println("params: "+params.toString());
 		
 		DatabaseHelper.createSetupFile("src/main/sql");
-	
+
 		//if (true) return;
 		
 		Converter converter=new Converter(params);
+		
 		try
 		{
+			converter.loadHcvBloodTests();
 			//converter.execute(args.actions);
-			
-//			converter.loadHbvBloodTests();
-//			converter.loadHcvBloodTests();
-			converter.loadPegribaSpreadsheets();		
-//			converter.loadAccessPatients();
-//			converter.loadFmFirstExamPatients();
-//			converter.loadFmHbvPatients();
-//			converter.loadFmHcvPatients();
+			//converter.getConverterService().test();
+			//try {converter.loadHbvBloodTests();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
+			//try {converter.loadHcvBloodTests();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
+			//try {converter.loadPegribaSpreadsheets();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}		
+			//try {converter.loadAccessPatients();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
+			//try {converter.loadFmFirstExamPatients();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
+			//try {converter.loadFmHbvPatients();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
+			//try {converter.loadFmHcvPatients();}catch(Exception e){System.err.println(ExceptionHelper.getMessage(e));}
 		}
 		catch(Exception e)
 		{
-			System.err.println(ExceptionHelper.getMessage(e));
+			StringHelper.println(ExceptionHelper.getMessage(e),Charsets.UTF_16);
 			e.printStackTrace();
 			FileHelper.writeFile("c:/temp/converter-exception.txt",ExceptionHelper.getMessage(e));
 		}
@@ -172,7 +177,7 @@ public class Converter
 		//applicationContext.refresh();
 	}
 	
-	private ConverterService getConverterService()
+	ConverterService getConverterService()
 	{
 		return (ConverterService)getApplicationContext().getBean("converterService");
 	}

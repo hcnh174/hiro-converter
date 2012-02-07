@@ -37,7 +37,7 @@ public class HeaderCallbackHandler implements LineCallbackHandler {
 	@Override
 	public void handleLine(String line)
 	{
-		StringHelper.println("Header: "+line,Charsets.UTF_16);
+		//StringHelper.println("Header: "+line,Charsets.UTF_16);
 		String[] fields=StringHelper.splitAsArray(line,""+delimiter); //"\t"
 		for (int index=0;index<fields.length;index++)
 		{

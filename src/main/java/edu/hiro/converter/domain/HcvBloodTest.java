@@ -24,55 +24,63 @@ public class HcvBloodTest extends AbstractEntity
 	public Integer getRowID(){return this.rowID;}
 	
 	protected String idnum;
+	protected String sheetname;
+	protected String num; // some identifying number
+	protected String 患者名;
+	protected String status;
+	protected String tx;
 	protected String 治療履歴;
 	protected String ifn履歴;
 	protected String 日付;
-	protected String hcvamt;//hcv-AM-T;
-	protected String hcvgeno;//hcv-GENO; hcvジェノタイプ
-	protected String hcvtaq;//hcv(Taq;
-	protected String hcvモニタジェノタイプ;//hcvﾓﾆﾀｼﾞｪﾉﾀｲﾌﾟ;
-	protected String hcvコアコウタイ;//hcvｺｱｺｳﾀｲ;
-	protected String hcvコウゲン;//hcvｺｳｹﾞﾝ;
-	protected String hcvテイセイ;//hcvﾃｲｾｲ;
-	protected String wbc;
-	protected String ne;//NE(%);
-	protected String hgb;
-	protected String plt;
-	protected String ast;//got
-	protected String alt;//gpt;
-	protected String ggtp;//γ-GTP;
-	protected String tbil;//T-Bil;
-	protected String dbil;//D-Bil;
-	protected String alph;
-	protected String alb;
-	protected String cre;
-	protected String afp;
-	protected String pt;
-	protected String bs;
-	protected String a1c;
-	protected String hdlcho;//HDL-CHO;
-	protected String コレステロール;//ｺﾚｽﾃﾛｰﾙ;
-	protected String nonhdlc;//nonHDL-C;
-	protected String ヒアルロン酸;//ﾋｱﾙﾛﾝ酸;
-	protected String ana;
-	protected String マイクロゾーム;//ﾏｲｸﾛｿﾞｰﾑ;
-	protected String ft4;//F-T4;
-	protected String ft3;//F-T3;
-	protected String tsh;
-	protected String fe;
-	protected String ins;
-	protected String icgr;//ICG-R;
-	protected String kl6;//KL-6;
-	protected String tg;
-	protected String ferritin;
+	
+	@Column(name="hcvamt") protected String hcvAMT; //hcv-AM-T
+	@Column(name="hcvgeno") protected String hcvGENO; //hcv-GENO hcvジェノタイプ
+	@Column(name="hcvtaq") protected String hcvtaq; //hcv(Taq
+	
+	@Column(name="hcvモニタジェノタイプ") protected String hcvモニタジェノタイプ;	                                                   
+	@Column(name="hcvコアコウタイ") protected String hcvコアコウタイ;
+	@Column(name="hcvコウゲン") protected String hcvコウゲン;
+	@Column(name="hcvテイセイ") protected String hcvテイセイ; //hcvﾃｲｾｲ
+	@Column(name="wbc") protected String WBC; //
+	@Column(name="ne") protected String NE; //NE(%)
+	@Column(name="hgb") protected String hgb; //
+	@Column(name="plt") protected String plt; //
+	@Column(name="ast") protected String AST; //GOT
+	@Column(name="alt") protected String ALT; //GPT
+	@Column(name="ggtp") protected String gGTP; //γ-GTP
+	@Column(name="tbil") protected String TBil; //T-Bil
+	@Column(name="dbil") protected String DBil; //D-Bil
+	@Column(name="alph") protected String alph; //
+	@Column(name="alb") protected String alb; //
+	@Column(name="cre") protected String cre; //
+	@Column(name="afp") protected String afp; //
+	@Column(name="pt") protected String pt; //
+	@Column(name="bs") protected String bs; //
+	@Column(name="a1c") protected String a1c; //
+	@Column(name="hdlcho") protected String HDLCHO; //HDL-CHO
+	@Column(name="コレステロール") protected String コレステロール; //ｺﾚｽﾃﾛｰﾙ
+	@Column(name="nonhdlc") protected String nonHDLC; //nonHDL-C
+	@Column(name="ヒアルロン酸") protected String ヒアルロン酸; //ﾋｱﾙﾛﾝ酸
+	@Column(name="ana") protected String ana; //
+	@Column(name="マイクロゾーム") protected String マイクロゾーム;
+	@Column(name="ft4") protected String FT4; //F-T4
+	@Column(name="ft3") protected String FT3; //F-T3
+	@Column(name="tsh") protected String tsh; //
+	@Column(name="fe") protected String fe; //
+	@Column(name="ins") protected String ins; //
+	@Column(name="icgr") protected String ICGR; //ICG-R
+	@Column(name="kl6") protected String KL6; //KL-6
+	@Column(name="tg") protected String tg; //
+	@Column(name="ferritin") protected String ferritin; //
+
 	
 	// inconsistent fields - same as one of the above?
-	protected String hba1c;
-	protected String glu;
-	protected String ptカッセイド;
-	protected String hcvモニタジ;
-	protected String hcvコアコウタ;
+//	protected String hba1c;
+//	protected String glu;
+//	protected String ptカッセイド;
+//	protected String hcvモニタジ;
+//	protected String hcvコアコウタ;
 	protected String ヒアルロンサン;
-	protected String hcvジェノタイプ;
-	protected String tafp;
+//	protected String hcvジェノタイプ;
+//	protected String tafp;
 }

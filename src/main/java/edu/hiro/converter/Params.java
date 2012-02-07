@@ -52,6 +52,7 @@ public class Params
 	{
 		SpringHelper.checkResolvedProperty("baseDir",baseDir);
 		SpringHelper.checkResolvedProperty("hbvbloodtestsDir",hbvbloodtestsDir);
+		SpringHelper.checkResolvedProperty("hcvbloodtestsDir",hcvbloodtestsDir);
 		SpringHelper.checkResolvedProperty("ifnDir",ifnDir);		
 		SpringHelper.checkResolvedProperty("accessFile",accessFile);
 		SpringHelper.checkResolvedProperty("fmfirstexamFile",fmfirstexamFile);
@@ -64,6 +65,7 @@ public class Params
 		Map<String,Object> map=Maps.newLinkedHashMap();
 		mapProperty(map,"baseDir");
 		mapProperty(map,"hbvbloodtestsDir");
+		mapProperty(map,"hcvbloodtestsDir");
 		mapProperty(map,"ifnDir");		
 		mapProperty(map,"accessFile");
 		mapProperty(map,"fmfirstexamFile");

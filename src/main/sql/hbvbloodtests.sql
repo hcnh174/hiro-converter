@@ -7,9 +7,16 @@ CREATE TABLE hbvbloodtests
 	rowid serial NOT NULL,
 
 	idnum TEXT,
+	sheetname TEXT,
+	num TEXT, -- some identifying number
+	患者名 TEXT,
+	フリガナ TEXT,
+	主治療施設 TEXT,
+	status TEXT,
+	tx TEXT,
 	治療履歴 TEXT,
 	ifn履歴 TEXT,
-	日付 TEXT,
+	日付 TEXT,	
 
 	mutant TEXT,--mutant
 	hbsag TEXT,--HBsAg
@@ -32,10 +39,7 @@ CREATE TABLE hbvbloodtests
 	bun TEXT,--BUN
 	afp TEXT,--AFP
 	pivka TEXT,--PIVKA
-	
-	icg TEXT, --icg(r15)
-	pc TEXT, --pc
-	
+
 	CONSTRAINT hbvbloodtests_pkey PRIMARY KEY (rowid)
 )
 WITH (
