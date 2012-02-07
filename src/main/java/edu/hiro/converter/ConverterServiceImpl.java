@@ -9,15 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import edu.hiro.converter.excel.HbvBloodTestLoader;
 import edu.hiro.converter.excel.HcvBloodTestLoader;
-import edu.hiro.converter.pegriba.PegribaSpreadsheetReader;
+import edu.hiro.converter.excel.IfnSpreadsheetReader;
 import edu.hiro.converter.repositories.AccessPatientRepository;
 import edu.hiro.converter.repositories.FmFirstExamRepository;
 import edu.hiro.converter.repositories.FmHbvPatientRepository;
 import edu.hiro.converter.repositories.FmHcvPatientRepository;
 import edu.hiro.converter.repositories.HbvBloodTestRepository;
 import edu.hiro.converter.repositories.HcvBloodTestRepository;
-import edu.hiro.converter.repositories.PegribaBloodTestRepository;
-import edu.hiro.converter.repositories.PegribaPatientRepository;
+import edu.hiro.converter.repositories.IfnBloodTestRepository;
+import edu.hiro.converter.repositories.IfnTreatmentRepository;
 import edu.hiro.util.SpringBatchHelper;
 
 @Service("converterService")
@@ -44,10 +44,10 @@ public class ConverterServiceImpl implements ConverterService
 	HbvBloodTestRepository hbvBloodTestRepository;
 	
 	@Autowired
-	PegribaPatientRepository pegribaPatientRepository;
+	IfnTreatmentRepository ifnTreatmentRepository;
 	
 	@Autowired
-	PegribaBloodTestRepository pegribaBloodTestRepository;
+	IfnBloodTestRepository ifnBloodTestRepository;
 
 
 	// filemaker files
@@ -95,8 +95,8 @@ public class ConverterServiceImpl implements ConverterService
 	public void loadPegribaSpreadsheets(String folder)
 	{
 		System.out.println("importing data from directory "+folder);
-		PegribaSpreadsheetReader reader=new PegribaSpreadsheetReader(pegribaPatientRepository,
-				pegribaBloodTestRepository);
+		IfnSpreadsheetReader reader=new IfnSpreadsheetReader(ifnTreatmentRepository,
+				ifnBloodTestRepository);
 		reader.loadFolder(folder);
 	}
 	

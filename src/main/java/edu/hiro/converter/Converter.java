@@ -5,14 +5,10 @@ import java.util.List;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
-import edu.hiro.converter.filemaker.PegribaPatient;
-import edu.hiro.util.BeanHelper;
-import edu.hiro.util.CException;
 import edu.hiro.util.DatabaseHelper;
 import edu.hiro.util.ExceptionHelper;
 import edu.hiro.util.FileHelper;
 import edu.hiro.util.MessageWriter;
-import edu.hiro.util.StringHelper;
 
 public class Converter
 {	

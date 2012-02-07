@@ -1,7 +1,6 @@
 package edu.hiro.converter.filemaker;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -15,15 +14,15 @@ import edu.hiro.util.AbstractEntity;
 import edu.hiro.util.StringHelper;
 
 @Entity
-@Table(name="pegribabloodtests")
-public class PegribaBloodTest extends AbstractEntity
+@Table(name="ifnbloodtests")
+public class IfnBloodTest extends AbstractEntity
 {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(columnDefinition="SERIAL NOT NULL")
 	protected Integer rowID=null;
 	
-	@Column(name="pegribadbno") public String pegribaDBno;
+	@Column(name="ifndbno") public String ifnDBno;
 	public String type;
 	public String 予定日=null;
 	public String 日付=null;
@@ -41,11 +40,11 @@ public class PegribaBloodTest extends AbstractEntity
 	@Column(name="pegイントロン") public String pegイントロン="";
 	public String レベトール="";
 
-	public PegribaBloodTest(){}
+	public IfnBloodTest(){}
 	
-	public PegribaBloodTest(String pegribaDBno, Type type)
+	public IfnBloodTest(String ifnDBno, Type type)
 	{
-		this.pegribaDBno=pegribaDBno;
+		this.ifnDBno=ifnDBno;
 		this.type=type.name();
 	}
 	

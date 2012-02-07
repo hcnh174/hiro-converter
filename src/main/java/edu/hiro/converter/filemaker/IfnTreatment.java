@@ -1,7 +1,5 @@
 package edu.hiro.converter.filemaker;
 
-import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,15 +10,15 @@ import javax.persistence.Table;
 import edu.hiro.util.AbstractEntity;
 
 @Entity
-@Table(name="pegribapatients")
-public class PegribaPatient extends AbstractEntity
+@Table(name="ifntreatments")
+public class IfnTreatment extends AbstractEntity
 {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(columnDefinition="SERIAL NOT NULL")
 	protected Integer rowID=null;
 	
-	@Column(name="pegribadbno") public String pegribaDBno;
+	@Column(name="ifndnbo") public String ifnDBno;
 	public String dbno;//DBno
 	public String シート名;
 	public String ダブル登録;
@@ -92,11 +90,11 @@ public class PegribaPatient extends AbstractEntity
 	@Column(name="ins開始") public String INS開始;
 	@Column(name="ins終了") public String INS終了;
 	
-	public PegribaPatient(){}
+	public IfnTreatment(){}
 	
-	public PegribaPatient(String pegribaDBno)
+	public IfnTreatment(String ifnDBno)
 	{
-		this.pegribaDBno=pegribaDBno;
+		this.ifnDBno=ifnDBno;
 	}	
 	
 	public enum Field

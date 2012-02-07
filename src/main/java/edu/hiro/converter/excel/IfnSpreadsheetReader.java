@@ -1,4 +1,4 @@
-package edu.hiro.converter.pegriba;
+package edu.hiro.converter.excel;
 
 import java.util.Date;
 import java.util.List;
@@ -10,12 +10,11 @@ import org.apache.poi.ss.usermodel.Workbook;
 import com.google.common.collect.Maps;
 
 import edu.hiro.converter.ImportHelper;
-import edu.hiro.converter.filemaker.PegribaBloodTest;
-import edu.hiro.converter.filemaker.PegribaPatient;
-import edu.hiro.converter.repositories.PegribaBloodTestRepository;
-import edu.hiro.converter.repositories.PegribaPatientRepository;
+import edu.hiro.converter.filemaker.IfnBloodTest;
+import edu.hiro.converter.filemaker.IfnTreatment;
+import edu.hiro.converter.repositories.IfnBloodTestRepository;
+import edu.hiro.converter.repositories.IfnTreatmentRepository;
 import edu.hiro.util.BeanHelper;
-import edu.hiro.util.CException;
 import edu.hiro.util.DateHelper;
 import edu.hiro.util.ExcelHelper;
 import edu.hiro.util.FileHelper;
@@ -23,7 +22,7 @@ import edu.hiro.util.MathHelper;
 import edu.hiro.util.MessageWriter;
 import edu.hiro.util.StringHelper;
 
-public class PegribaSpreadsheetReader
+public class IfnSpreadsheetReader
 {	
 	protected static final String filepattern=".*[0-9]+-[0-9]+\\.xlsx";
 	protected static final String sheetpattern="[0-9]+(-[0-9]+)?";
@@ -34,20 +33,20 @@ public class PegribaSpreadsheetReader
 	
 	//////////////////////////////////////////////////////////////////////////////////
 
-	private PegribaPatientRepository pegribaPatientRepository;
-	private PegribaBloodTestRepository pegribaBloodTestRepository;
+	private IfnTreatmentRepository ifnTreatmentRepository;
+	private IfnBloodTestRepository ifnBloodTestRepository;
 	
-	public PegribaSpreadsheetReader(PegribaPatientRepository pegribaPatientRepository,
-			PegribaBloodTestRepository pegribaBloodTestRepository)
+	public IfnSpreadsheetReader(IfnTreatmentRepository ifnTreatmentRepository,
+			IfnBloodTestRepository ifnBloodTestRepository)
 	{
-		this.pegribaPatientRepository=pegribaPatientRepository;
-		this.pegribaBloodTestRepository=pegribaBloodTestRepository;
+		this.ifnTreatmentRepository=ifnTreatmentRepository;
+		this.ifnBloodTestRepository=ifnBloodTestRepository;
 	}
 	
 	public void loadFolder(String dir)
 	{
-		pegribaPatientRepository.deleteAll();
-		pegribaBloodTestRepository.deleteAll();
+		ifnTreatmentRepository.deleteAll();
+		ifnBloodTestRepository.deleteAll();
 		dir=FileHelper.normalizeDirectory(dir);
 		writer.message("loading folder="+dir);
 		List<String> filenames=FileHelper.listFilesRecursively(dir, ".xlsx");
@@ -87,16 +86,16 @@ public class PegribaSpreadsheetReader
 		writer.br();
 	}
 	
-	private PegribaPatient createPegribaPatient(Sheet sheet)
+	private IfnTreatment createIfnTreatment(Sheet sheet)
 	{
-		String pegribaDBno=sheet.getSheetName();
-		return new PegribaPatient(pegribaDBno);
+		String ifnDBno=sheet.getSheetName();
+		return new IfnTreatment(ifnDBno);
 	}
 	
 	private void loadSheet(Sheet sheet)
 	{
 		writer.write(sheet.getSheetName()+" ");
-		PegribaPatient patient=createPegribaPatient(sheet);
+		IfnTreatment patient=createIfnTreatment(sheet);
 	
 		setField(sheet,patient,"DBno",39,22,1,2);//DBno
 		setField(sheet,patient,"投与開始日",3,1,1,4);
@@ -181,7 +180,7 @@ public class PegribaSpreadsheetReader
 		
 		//patient.年齢=DateHelper.getDurationInYears(patient.投与開始日,patient.生年月日);
 		//StringHelper.println(patient.toString());
-		pegribaPatientRepository.save(patient);
+		ifnTreatmentRepository.save(patient);
 		
 		loadBloodTests(sheet,patient);
 	}
@@ -255,18 +254,18 @@ public class PegribaSpreadsheetReader
 	
 	///////////////////////////////////////////////////////////////
 	
-	private void loadBloodTests(Sheet sheet, PegribaPatient patient)
+	private void loadBloodTests(Sheet sheet, IfnTreatment patient)
 	{		
-		PegribaBloodTest.Type[] weeks=PegribaBloodTest.Type.values();
-		Map<PegribaBloodTest.Type,PegribaBloodTest> bloodtests=Maps.newLinkedHashMap();
+		IfnBloodTest.Type[] weeks=IfnBloodTest.Type.values();
+		Map<IfnBloodTest.Type,IfnBloodTest> bloodtests=Maps.newLinkedHashMap();
 		
 		int col=3;
 		for (int i=0;i<=20;i++)
 		{
-			PegribaBloodTest.Type week=weeks[i];
-			PegribaBloodTest bloodtest=findOrCreateBloodTest(patient,bloodtests,week);
+			IfnBloodTest.Type week=weeks[i];
+			IfnBloodTest bloodtest=findOrCreateBloodTest(patient,bloodtests,week);
 			int row=10;
-			for (PegribaBloodTest.Field field : PegribaBloodTest.Field.values())
+			for (IfnBloodTest.Field field : IfnBloodTest.Field.values())
 			{
 				setField(sheet,bloodtest,field.name(),row++,col);
 			}
@@ -275,27 +274,27 @@ public class PegribaSpreadsheetReader
 		col=3;
 		for (int i=21;i<weeks.length;i++)
 		{
-			PegribaBloodTest.Type week=weeks[i];
-			PegribaBloodTest bloodtest=findOrCreateBloodTest(patient,bloodtests,week);
+			IfnBloodTest.Type week=weeks[i];
+			IfnBloodTest bloodtest=findOrCreateBloodTest(patient,bloodtests,week);
 			int row=27;
-			for (PegribaBloodTest.Field field : PegribaBloodTest.Field.values())
+			for (IfnBloodTest.Field field : IfnBloodTest.Field.values())
 			{
 				setField(sheet,bloodtest,field.name(),row++,col);
 			}
 			col++;
 		}
 		
-		for (PegribaBloodTest bloodtest : bloodtests.values())
+		for (IfnBloodTest bloodtest : bloodtests.values())
 		{
 			if (!bloodtest.isEmpty())
-				pegribaBloodTestRepository.save(bloodtest);
+				ifnBloodTestRepository.save(bloodtest);
 		}
 	}
 
-	private PegribaBloodTest findOrCreateBloodTest(PegribaPatient patient, Map<PegribaBloodTest.Type,PegribaBloodTest> bloodtests, PegribaBloodTest.Type type)
+	private IfnBloodTest findOrCreateBloodTest(IfnTreatment patient, Map<IfnBloodTest.Type,IfnBloodTest> bloodtests, IfnBloodTest.Type type)
 	{
 		if (!bloodtests.containsKey(type))
-			bloodtests.put(type,new PegribaBloodTest(patient.pegribaDBno,type));
+			bloodtests.put(type,new IfnBloodTest(patient.ifnDBno,type));
 		return bloodtests.get(type);
 	}
 }

@@ -4,5 +4,5 @@ fmhbv.sql
 fmhcv.sql
 hbvbloodtests.sql
 hcvbloodtests.sql
-pegribabloodtests.sql
-pegribapatients.sql
+ifnbloodtests.sql
+ifntreatments.sql
