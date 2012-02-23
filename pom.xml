@@ -19,7 +19,6 @@
 		<roo.version>1.2.0.RELEASE</roo.version>
 		<slf4j.version>1.6.2</slf4j.version>
 		<spring.version>3.1.0.RELEASE</spring.version>
-		<poi.version>3.8-beta5</poi.version>
 		<spring.data.jpa.version>1.0.2.RELEASE</spring.data.jpa.version>
 		<hibernate.version>3.6.8.Final</hibernate.version>
 		<action>help</action>
@@ -131,18 +130,7 @@
 			 <groupId>org.springframework.data</groupId>
 			 <artifactId>spring-data-jpa</artifactId>
 			 <version>${spring.data.jpa.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>${poi.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>${poi.version}</version>
-		</dependency>
-            
+		</dependency>            
 	</dependencies>
 	<build>
 		<plugins>
